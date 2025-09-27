@@ -1060,22 +1060,57 @@
             const preloader = document.getElementById('preloader');
             const preloaderPercent = document.getElementById('preloader-percent');
             let loaded = 0;
-            const interval = setInterval(() => {
-                loaded++;
-                preloaderPercent.textContent = `${loaded}%`;
-                if (loaded >= 100) {
-                    clearInterval(interval);
-                    gsap.to(preloader, { 
-                        opacity: 0, 
+            let preloaderInterval = null;
+
+            function finishPreloader() {
+                // clear the interval if it's still running
+                if (preloaderInterval) {
+                    clearInterval(preloaderInterval);
+                    preloaderInterval = null;
+                }
+
+                // fade out and initialize animations (idempotent)
+                if (preloader.style.display !== 'none') {
+                    gsap.to(preloader, {
+                        opacity: 0,
                         duration: 0.8,
                         onComplete: () => {
                             preloader.style.display = 'none';
                             document.body.classList.add('loaded');
-                            initPageAnimations();
+                            try { initPageAnimations(); } catch (err) { console.error('initPageAnimations error', err); }
                         }
                     });
                 }
+            }
+
+            preloaderInterval = setInterval(() => {
+                loaded++;
+                preloaderPercent.textContent = `${loaded}%`;
+                if (loaded >= 100) {
+                    finishPreloader();
+                }
             }, 20);
+
+            // Fallbacks: some browsers throttle timers and rAF until a user gesture or until resources finish loading.
+            // Add several fallbacks so the page becomes interactive even when timers are delayed.
+            window.addEventListener('load', () => {
+                // If everything else didn't clear the preloader, force finish on full load
+                if (preloader.style.display !== 'none') finishPreloader();
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && preloader.style.display !== 'none') {
+                    finishPreloader();
+                }
+            });
+
+            // One-time user interaction fallback (click/touch/keyboard) — helpful when the browser blocks timers until gesture
+            function onFirstInteraction() {
+                if (preloader.style.display !== 'none') finishPreloader();
+            }
+            window.addEventListener('click', onFirstInteraction, { once: true });
+            window.addEventListener('touchstart', onFirstInteraction, { once: true });
+            window.addEventListener('keydown', onFirstInteraction, { once: true });
 
             function initPageAnimations() {
                 // --- GSAP & SCROLLTRIGGER SETUP ---
