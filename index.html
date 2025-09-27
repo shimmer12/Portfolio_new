@@ -1,491 +1,751 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Srishti Soni - Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Srishti Soni - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #FFF8F7; /* A very light pink background */
+            cursor: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        body.loaded {
+            opacity: 1;
+        }
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #BE123C;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+        }
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+        /* SVG Snitch Cursor */
+        #snitch-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80px; /* Adjust size as needed */
+            height: 80px;
+            pointer-events: none;
+            z-index: 9999;
+        }
 
-  <style>
-    :root { --rose-700:#BE123C; --rose-500:#F43F5E; }
-    * { box-sizing: border-box; }
-    html, body { margin:0; padding:0; }
-    body {
-      font-family:'Roboto',sans-serif;
-      background:#FFF8F7;
-      color:#111827; /* gray-900 */
-      overflow-x:hidden;
-    }
-    h1,h2,h3,h4,h5,h6 { font-family:'Montserrat',sans-serif; }
 
-    /* Navbar */
-    header {
-      position:fixed; top:0; left:0; right:0; z-index:50;
-      backdrop-filter: blur(8px);
-      background: rgba(255,255,255,0.7);
-      border-bottom: 1px solid rgba(0,0,0,.06);
-    }
-    nav { max-width:1100px; margin:0 auto; padding:16px 24px; display:flex; justify-content:space-between; align-items:center; }
-    nav a { color:#374151; text-decoration:none; margin:0 6px; padding:8px 12px; border-radius:8px; }
-    nav a:hover { color:var(--rose-700); background: rgba(190,18,60,.06); }
-    .cta { background:var(--rose-700); color:#fff !important; }
-    .cta:hover { background:var(--rose-500); }
+        /* Floating Labubu Character */
+        .labubu-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+        .labubu-character {
+            width: 6rem; /* 96px */
+            height: 6rem; /* 96px */
+            animation: bobbing 3s ease-in-out infinite;
+        }
+        #labubu-bubble {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 250px;
+            position: relative;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform-origin: bottom right;
+            transform: scale(0.5);
+            visibility: hidden;
+        }
+        #labubu-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid white;
+        }
+        #labubu-text {
+            font-size: 0.9rem;
+            color: #374151;
+            text-align: center;
+        }
+        @keyframes bobbing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
 
-    /* Brand gradient text */
-    .brand-name{
-      font-family:'Montserrat',sans-serif;
-      font-weight:900;
-      letter-spacing:.4px;
-      background:linear-gradient(90deg,#f43f5e,#f59e0b,#22d3ee,#f43f5e);
-      background-size:200% 100%;
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 0 12px rgba(244,63,94,.15);
-      animation:brandWave 8s linear infinite;
-      cursor:pointer;
-    }
-    @keyframes brandWave { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
-    .brand-name:hover{ text-shadow:0 0 18px rgba(244,63,94,.35); }
+        /* Vertical Scrolling Setup */
+        main {
+            width: 100%;
+        }
+        .panel {
+            width: 100vw;
+            min-height: 100vh; /* Use min-height to accommodate content */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 8rem 2rem; /* More vertical padding */
+        }
 
-    /* Sections */
-    main { margin-top:74px; }
-    section.panel {
-      min-height:100vh; display:flex; align-items:center; justify-content:center;
-      padding:80px 24px;
-      position:relative;
-    }
-    .container { width:100%; max-width:1100px; margin:0 auto; }
-    .grid { display:grid; gap:48px; grid-template-columns:1fr; }
-    @media (min-width: 860px) { .grid { grid-template-columns:1fr 1fr; } }
-    .btn {
-      display:inline-block; padding:12px 20px; border-radius:9999px;
-      text-decoration:none; font-weight:600; transition:.2s;
-    }
-    .btn-primary { background:var(--rose-700); color:#fff; }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.12); background:var(--rose-500); }
-    .btn-link { color:#374151; font-weight:600; }
-    .btn-link:hover { color:var(--rose-700); }
+        /* Specific panel styles */
+        #home .grid { width: 100%; max-width: 1200px; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -30px; top: 10px; width: 20px; height: 20px;
+            border-radius: 50%; background-color: #FBE2E3; border: 4px solid #E11D48;
+        }
 
-    /* Timeline contrast bump */
-    .timeline { position:relative; }
-    .timeline::before {
-      content:''; position:absolute; left: -20px; top:0; bottom:0; width:2px; background:#fecaca; /* rose-200 */
-    }
-    .timeline-item { position:relative; padding-left:28px; margin-bottom:32px; }
-    .timeline-item::before {
-      content:''; position:absolute; left:-30px; top:10px; width:20px; height:20px; border-radius:50%;
-      background:#FBE2E3; border:4px solid var(--rose-700);
-    }
+        /* Liquid Image Effect */
+        .liquid-image {
+            filter: url(#liquid-filter);
+        }
 
-    /* Skills marquee */
-    .skills-wrap { overflow:hidden; -webkit-mask:linear-gradient(90deg,transparent,white 15%,white 85%,transparent); mask:linear-gradient(90deg,transparent,white 15%,white 85%,transparent); }
-    .skills-row { display:flex; gap:12px; width:max-content; animation:marquee 20s linear infinite; }
-    .chip {
-      display:flex; align-items:center; gap:8px; padding:10px 14px; background:#fff; border-radius:10px;
-      box-shadow:0 4px 10px rgba(0,0,0,.06); white-space:nowrap; color:#374151;
-    }
-    @keyframes marquee { to { transform: translateX(calc(-50% - 12px)); } }
+        /* Skill Scroller */
+        .scroller {
+            max-width: 1100px; margin: auto; overflow: hidden;
+            -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+            mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+        }
+        .scroller__inner {
+            display: flex; list-style: none; padding: 0; margin: 0; gap: 2rem; width: max-content;
+        }
+        
+        .scroller[data-animated="true"] .scroller__inner {
+             animation: scroll 20s linear infinite; /* Increased speed */
+        }
 
-    /* Leaves (CodePen-style) */
-    #leaves { position:relative; top:-50px; width:100%; text-align:right; }
-    #leaves i {
-      display:inline-block; width:200px; height:150px;
-      background: linear-gradient(to bottom right, #309900, #005600);
-      transform: skew(20deg) rotate(180deg);
-      border-radius: 5% 40% 70%;
-      box-shadow: inset 0 0 1px #222;
-      border: 1px solid #333;
-      z-index:1;
-      animation: falling 5s 0s infinite ease-in-out;
-    }
-    #leaves i:nth-of-type(2n){ animation-name: falling2; }
-    #leaves i:nth-of-type(3n){ animation-name: falling3; }
-    #leaves i:before {
-      position:absolute; content:''; top:117px; right:9px; height:27px; width:32px; transform: rotate(49deg);
-      border-radius: 0% 15% 15% 0%;
-      border-top:1px solid #222; border-bottom:1px solid #222; border-right:1px solid #222;
-      background: linear-gradient(to right, rgba(0,100,0,1), #005600);
-      z-index:1;
-    }
-    #leaves i:after {
-      content:''; height:125px; width:10px; background: linear-gradient(to right, rgba(0,0,0,.15), rgba(0,0,0,0));
-      display:block; transform: rotate(125deg); position:absolute; left:85px; border-radius:50%;
-    }
-    #leaves i:nth-of-type(n)    { height:23px; width:30px; opacity:.7; }
-    #leaves i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
-    #leaves i:nth-of-type(n):after  { width:2px; height:17px; left:12px; top:0px; }
-    #leaves i:nth-of-type(2n+1)    { height:11px; width:16px; opacity:.5; }
-    #leaves i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0; }
-    #leaves i:nth-of-type(2n+1):after  { width:2px; height:6px; left:5px; top:1px; }
-    #leaves i:nth-of-type(3n+2)  { height:17px; width:23px; opacity:.3; }
-    #leaves i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
-    #leaves i:nth-of-type(3n+2):after   { height:10px; width:2px; top:1px; left:8px; }
+        @keyframes scroll { 
+            to { 
+                transform: translate(calc(-50% - 1rem)); 
+            } 
+        }
 
-    #leaves i:nth-of-type(2n+2){ background: linear-gradient(to bottom right, #5e9900, #2b5600); }
-    #leaves i:nth-of-type(4n+1){ background: linear-gradient(to bottom right, #999900, #564500); }
+        .skill-item {
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.75rem 1.25rem; background: white; border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05); white-space: nowrap;
+            transition: transform 0.2s;
+        }
+        .skill-item:hover {
+            transform: translateY(-5px);
+        }
+        .skill-item svg { width: 28px; height: 28px; }
+        .skill-item span { font-weight: 500; font-size: 1rem; color: #374151; }
 
-    #leaves i:nth-of-type(n)    { animation-delay: 1.9s;}
-    #leaves i:nth-of-type(2n)   { animation-delay: 3.9s;}
-    #leaves i:nth-of-type(3n)   { animation-delay: 2.3s;}
-    #leaves i:nth-of-type(4n)   { animation-delay: 4.4s;}
-    #leaves i:nth-of-type(5n)   { animation-delay: 5s;}
-    #leaves i:nth-of-type(6n)   { animation-delay: 3.5s;}
-    #leaves i:nth-of-type(7n)   { animation-delay: 2.8s;}
-    #leaves i:nth-of-type(8n)   { animation-delay: 1.5s;}
-    #leaves i:nth-of-type(9n)   { animation-delay: 3.3s;}
-    #leaves i:nth-of-type(10n)  { animation-delay: 2.5s;}
-    #leaves i:nth-of-type(11n)  { animation-delay: 1.2s;}
-    #leaves i:nth-of-type(12n)  { animation-delay: 4.1s;}
-    #leaves i:nth-of-type(13n)  { animation-delay: 1s;}
-    #leaves i:nth-of-type(14n)  { animation-delay: 4.7s;}
-    #leaves i:nth-of-type(15n)  { animation-delay: 3s;}
-
-    @keyframes falling{
-      from{ transform: translate3d(300px,0,0) rotate(180deg); }
-      to  { transform: translate3d(-350px,700px,0) rotate(270deg); opacity:0; }
-    }
-    @keyframes falling2{
-      from{ transform: translate3d(0,0,0) rotate(270deg); }
-      to  { transform: translate3d(-400px,680px,0) rotate(180deg); opacity:0; }
-    }
-    @keyframes falling3{
-      from{ transform: translate3d(0,0,0) rotate(160deg); }
-      to  { transform: translate3d(-230px,640px,0) rotate(110deg); opacity:0; }
-    }
-
-    /* Cloud/mist canvas */
-    #fx-canvas {
-      position:fixed; inset:0; width:100vw; height:100vh; z-index:-1; pointer-events:none;
-      display:block;
-    }
-
-    /* Helpers */
-    .mb-0 { margin-bottom:0; }
-    .mb-2 { margin-bottom:.5rem; }
-    .mb-3 { margin-bottom:.75rem; }
-    .mb-4 { margin-bottom:1rem; }
-    .mb-6 { margin-bottom:1.5rem; }
-    .mb-8 { margin-bottom:2rem; }
-    .mb-12{ margin-bottom:3rem; }
-    .mt-2 { margin-top:.5rem; }
-    .mt-4 { margin-top:1rem; }
-    .mt-6 { margin-top:1.5rem; }
-    .mt-8 { margin-top:2rem; }
-    .mt-16{ margin-top:4rem; }
-    .center { text-align:center; }
-    .card {
-      background:#fff; border-radius:12px; padding:24px;
-      box-shadow:0 8px 20px rgba(0,0,0,.08);
-    }
-    a { color:inherit; }
-  </style>
+        /* GSAP animation prep for SplitType */
+        .gsap-reveal-chars .char {
+             opacity: 0;
+             transform: translateY(100%);
+        }
+    </style>
 </head>
 <body>
-  <!-- Watercolor sky + mist -->
-  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+    <div id="preloader"><span id="preloader-percent">0%</span></div>
+    
+    <canvas id="particle-canvas"></canvas>
 
-  <header>
-    <nav>
-      <a class="brand-name" id="brandName">Srishti Soni</a>
-      <div class="links">
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact" class="cta">Contact</a>
-      </div>
-    </nav>
-  </header>
+    <!-- Simplified and improved SVG Snitch Cursor -->
+    <div id="snitch-cursor">
+        <svg id="snitch-svg" viewBox="0 0 100 100" >
+            <defs>
+                <radialGradient id="gold-gradient" cx="0.4" cy="0.4" r="0.6">
+                    <stop offset="0%" style="stop-color:#FFD700" />
+                    <stop offset="100%" style="stop-color:#B8860B" />
+                </radialGradient>
+            </defs>
+            <!-- Left Wing -->
+            <g id="left-wing">
+                 <path d="M 35,50 Q 10,40 5,20 Q 15,45 35,50 Z" fill="rgba(255,255,255,0.8)" stroke="#B8860B" stroke-width="0.5"/>
+                 <line x1="30" y1="48" x2="15" y2="35" stroke="#B8860B" stroke-width="0.4"/>
+                 <line x1="25" y1="49" x2="10" y2="40" stroke="#B8860B" stroke-width="0.4"/>
+            </g>
+            <!-- Right Wing -->
+             <g id="right-wing">
+                <path d="M 65,50 Q 90,40 95,20 Q 85,45 65,50 Z" fill="rgba(255,255,255,0.8)" stroke="#B8860B" stroke-width="0.5"/>
+                <line x1="70" y1="48" x2="85" y2="35" stroke="#B8860B" stroke-width="0.4"/>
+                <line x1="75" y1="49" x2="90" y2="40" stroke="#B8860B" stroke-width="0.4"/>
+            </g>
+            <!-- Body -->
+            <circle cx="50" cy="50" r="15" fill="url(#gold-gradient)" stroke="#3c2e2d" stroke-width="1"/>
+        </svg>
+    </div>
+    
+    <!-- SVG Filters for Liquid Effect -->
+    <svg style="display:none;">
+      <defs>
+        <filter id="liquid-filter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="1" result="turbulence"/>
+          <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+    </svg>
 
-  <main>
-    <!-- HERO -->
-    <section id="home" class="panel">
-      <div class="container">
-        <div class="grid">
-          <div>
-            <h1 style="font-size: clamp(40px,6vw,64px); line-height:1.05; font-weight:800;">
-              Software Developer & Creative Problem Solver
-            </h1>
-            <p class="mt-6" style="font-size:18px; color:#4B5563; max-width:560px;">
-              I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.
-            </p>
-            <div class="mt-8" style="display:flex; gap:12px; flex-wrap:wrap;">
-              <a class="btn btn-primary" href="mailto:imsrishti1202@gmail.com">Get in Touch</a>
-              <a class="btn btn-link" href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer">
-                Download Resume →
-              </a>
-            </div>
-          </div>
-          <div class="center">
-            <svg class="illustration" width="320" height="320" viewBox="0 0 200 200" aria-hidden="true">
-              <defs>
-                <linearGradient id="postGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#FDE047"/>
-                  <stop offset="100%" stop-color="#F59E0B"/>
-                </linearGradient>
-              </defs>
-              <rect x="40" y="50" width="10" height="150" fill="url(#postGradient)" rx="5"></rect>
-              <rect x="95" y="30" width="10" height="170" fill="url(#postGradient)" rx="5"></rect>
-              <rect x="150" y="50" width="10" height="150" fill="url(#postGradient)" rx="5"></rect>
-              <circle cx="45" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none"></circle>
-              <circle cx="100" cy="30" r="25" stroke="url(#postGradient)" stroke-width="8" fill="none"></circle>
-              <circle cx="155" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none"></circle>
-            </svg>
-          </div>
+    <div class="labubu-container hidden md:flex">
+        <div id="labubu-bubble">
+            <p id="labubu-text">Hi!</p>
         </div>
-      </div>
-      <!-- CodePen-style leaves floating near top -->
-      <div id="leaves" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i>
-      </div>
-    </section>
+        <div class="labubu-character">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><g><!-- Ears --><path d="M25 40 C 15 10, 35 10, 30 40" fill="#E11D48"/><path d="M75 40 C 85 10, 65 10, 70 40" fill="#E11D48"/><!-- Head --><ellipse cx="50" cy="65" rx="35" ry="30" fill="#FBE2E3"/><path d="M15 65 C 20 95, 80 95, 85 65" fill="#FBE2E3"/><!-- Face --><circle cx="40" cy="60" r="3" fill="#4B5563"/><circle cx="60" cy="60" r="3" fill="#4B5563"/><path d="M48 70 Q 50 75, 52 70" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></g></svg>
+        </div>
+    </div>
 
-    <!-- ABOUT -->
-    <section id="about" class="panel" style="background:#fff;">
-      <div class="container center">
-        <h2 style="font-size: clamp(32px,4.5vw,48px); font-weight:800;" class="mb-6">About Me</h2>
-        <p style="font-size:20px; color:#4B5563; max-width:760px; margin:0 auto;">
-          Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.
-        </p>
-        <ul style="margin:24px auto 0; max-width:680px; color:#374151; font-size:18px; line-height:1.6; text-align:left;">
-          <li><span style="color:var(--rose-700); font-weight:700; margin-right:8px;">→</span><strong>Problem Solving:</strong> 1000+ LeetCode questions, ~600-day streak.</li>
-          <li><span style="color:var(--rose-700); font-weight:700; margin-right:8px;">→</span><strong>Technical Proficiency:</strong> DSA + full-stack web development.</li>
-          <li><span style="color:var(--rose-700); font-weight:700; margin-right:8px;">→</span><strong>Practical Experience:</strong> Impactful projects & internships.</li>
-        </ul>
-      </div>
-    </section>
+    <!-- Header & Navigation -->
+    <header class="bg-white/70 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold text-gray-900 magnetic-link">Srishti Soni</a>
+            <div class="hidden md:flex items-center space-x-2">
+                <a href="#about" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">About</a>
+                <a href="#experience" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">Experience</a>
+                <a href="#projects" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">Projects</a>
+                <a href="#skills" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">Skills</a>
+                <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-px magnetic-link">Contact</a>
+            </div>
+             <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2 bg-white/90">
+             <a href="#about" class="block text-gray-600 hover:text-rose-600 transition duration-300">About</a>
+             <a href="#experience" class="block text-gray-600 hover:text-rose-600 transition duration-300">Experience</a>
+             <a href="#projects" class="block text-gray-600 hover:text-rose-600 transition duration-300">Projects</a>
+             <a href="#skills" class="block text-gray-600 hover:text-rose-600 transition duration-300">Skills</a>
+             <a href="#contact" class="block bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 transition duration-300 mt-2 text-center">Contact</a>
+        </div>
+    </header>
 
-    <!-- EXPERIENCE -->
-    <section id="experience" class="panel">
-      <div class="container">
-        <h2 class="center mb-16" style="font-size: clamp(32px,4.5vw,48px); font-weight:800;">Professional Experience</h2>
-        <div class="timeline" style="max-width:720px; margin:0 auto;">
-          <div class="timeline-item">
-            <div class="card">
-              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
-                <div>
-                  <h3 class="mb-2" style="font-size:20px; margin:0;">Software Developer Intern</h3>
-                  <p class="mb-0" style="color:var(--rose-700); font-weight:600;">NTPC</p>
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="panel">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <h1 class="text-6xl md:text-7xl font-extrabold text-gray-900 leading-tight gsap-reveal-chars">Software Developer & Creative Problem Solver</h1>
+                    <p class="mt-6 text-lg text-gray-600 max-w-xl mx-auto md:mx-0 gsap-reveal">I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.</p>
+                    <div class="mt-8 flex justify-center md:justify-start items-center space-x-4 gsap-reveal">
+                         <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link">Get in Touch</a>
+                         <a href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link">Download Resume &rarr;</a>
+                    </div>
                 </div>
-                <span style="color:#6B7280; font-size:14px; font-weight:600;">Jun 2024 – Jul 2024</span>
-              </div>
-              <ul style="margin-top:14px; color:#4B5563; line-height:1.6;">
-                <li>Django Inventory Management with Chart.js visualizations.</li>
-                <li>Optimized MySQL interactions for efficiency.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="card">
-              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
-                <div>
-                  <h3 class="mb-2" style="font-size:20px; margin:0;">Industrial Intern</h3>
-                  <p class="mb-0" style="color:var(--rose-700); font-weight:600;">CSPDCL</p>
+                <div class="flex justify-center items-center gsap-reveal">
+                    <svg class="w-80 h-80 md:w-96 md:h-96" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="postGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#FDE047" /> <!-- yellow-300 -->
+                                <stop offset="100%" style="stop-color:#F59E0B" /> <!-- amber-500 -->
+                            </linearGradient>
+                        </defs>
+                        <!-- Posts -->
+                        <rect x="40" y="50" width="10" height="150" fill="url(#postGradient)" rx="5" />
+                        <rect x="95" y="30" width="10" height="170" fill="url(#postGradient)" rx="5" />
+                        <rect x="150" y="50" width="10" height="150" fill="url(#postGradient)" rx="5" />
+                        <!-- Hoops -->
+                        <circle cx="45" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none" />
+                        <circle cx="100" cy="30" r="25" stroke="url(#postGradient)" stroke-width="8" fill="none" />
+                        <circle cx="155" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none" />
+                    </svg>
                 </div>
-                <span style="color:#6B7280; font-size:14px; font-weight:600;">Jun 2023 – Jul 2023</span>
-              </div>
-              <ul style="margin-top:14px; color:#4B5563; line-height:1.6;">
-                <li>File Tracking System to streamline approvals.</li>
-                <li>Django models, views, templates, URL routing.</li>
-              </ul>
             </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects" class="panel" style="background:#fff;">
-      <div class="container">
-        <h2 class="center mb-16" style="font-size: clamp(32px,4.5vw,48px); font-weight:800;">My Projects</h2>
-        <div class="card" style="overflow:hidden;">
-          <div class="grid" style="gap:0; grid-template-columns:1fr 1fr;">
-            <div style="padding:32px;">
-              <h3 style="font-size:24px; margin:0 0 8px;">Bhagavad Gita AI Analysis System</h3>
-              <p style="color:#4B5563; margin:12px 0 20px;">
-                LLM-powered textual analysis, extracting themes and insights.
-              </p>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <span class="chip">Python</span>
-                <span class="chip">LangChain</span>
-                <span class="chip">Generative AI</span>
-              </div>
-              <div class="mt-8">
-                <a href="https://github.com/srishtisoni12" target="_blank" rel="noopener noreferrer" style="color:var(--rose-700); font-weight:700; text-decoration:none;">
-                  View on GitHub →
-                </a>
-              </div>
+        </section>
+        
+        <!-- About Me Section -->
+        <section id="about" class="panel bg-white">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-5xl font-bold text-center mb-6 gsap-reveal-chars">About Me</h2>
+                <p class="text-xl text-gray-600 gsap-reveal">Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.</p>
+                 <ul class="mt-6 text-lg text-gray-700 space-y-3 text-left max-w-xl mx-auto">
+                    <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Problem Solving:</strong> Honed my skills by solving 1000+ questions on LeetCode, maintaining a 600-day streak.</li>
+                    <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Technical Proficiency:</strong> Strong foundation in Data Structures & Algorithms and full-stack web development.</li>
+                    <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Practical Experience:</strong> Applied my knowledge through impactful projects and professional internship experiences.</li>
+                </ul>
             </div>
-            <div style="background:#FBE2E3; display:flex; align-items:center; justify-content:center; min-height:260px;">
-              <img src="https://placehold.co/600x400/FBE2E3/450A0A?text=Project+Preview" alt="Project preview" style="width:100%; height:100%; object-fit:cover;">
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="panel">
+            <div class="w-full max-w-4xl">
+                <h2 class="text-5xl font-bold text-center mb-16 gsap-reveal-chars">Professional Experience</h2>
+                <div class="max-w-3xl mx-auto relative">
+                    <div class="border-l-2 border-rose-200 absolute h-full top-0 left-[-20px]"></div>
+                    <div class="mb-12 relative timeline-item pl-8 gsap-reveal">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="flex justify-between items-start">
+                               <div><h3 class="text-xl font-semibold text-gray-900">Software Developer Intern</h3><p class="text-rose-600 font-medium">NTPC</p></div>
+                               <span class="text-gray-500 text-sm font-medium">Jun 2024 - Jul 2024</span>
+                            </div>
+                            <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
+                                <li>Developed and implemented a Django-based Inventory Management System featuring CRUD operations and dynamic data visualizations using Chart.js.</li>
+                                <li>Optimized MySQL database interactions, enhancing system efficiency and data management.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="relative timeline-item pl-8 gsap-reveal">
+                         <div class="bg-white p-6 rounded-lg shadow-md">
+                             <div class="flex justify-between items-start">
+                                <div><h3 class="text-xl font-semibold text-gray-900">Industrial Intern</h3><p class="text-rose-600 font-medium">CSPDCL</p></div>
+                                <span class="text-gray-500 text-sm font-medium">Jun 2023 - Jul 2023</span>
+                            </div>
+                            <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
+                                <li>Designed and deployed a File Tracking System to streamline project approvals.</li>
+                                <li>Built Django applications, integrating models, views, templates, and URL routing.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- SKILLS -->
-    <section id="skills" class="panel">
-      <div class="container center">
-        <h2 class="mb-4" style="font-size: clamp(32px,4.5vw,48px); font-weight:800;">Technical Skills</h2>
-        <p class="mb-12" style="color:#4B5563;">A scrolling showcase of the languages and tools I work with.</p>
+        <!-- Projects Section -->
+        <section id="projects" class="panel bg-white">
+             <div class="w-full max-w-5xl">
+                <h2 class="text-5xl font-bold text-center mb-16 gsap-reveal-chars">My Projects</h2>
+                <div class="bg-rose-50 rounded-lg shadow-lg overflow-hidden group gsap-reveal">
+                    <div class="grid md:grid-cols-2">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-bold text-gray-900">Bhagavad Gita AI Analysis System</h3>
+                            <p class="mt-4 text-gray-600">Engineered an LLM-powered system for deep textual analysis, leveraging generative AI to extract themes and generate insights.</p>
+                            <div class="mt-6 flex flex-wrap gap-3">
+                               <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Python</span>
+                               <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">LangChain</span>
+                               <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Generative AI</span>
+                            </div>
+                            <div class="mt-8">
+                               <a href="https://github.com/srishtisoni12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link">View on GitHub <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                           </div>
+                        </div>
+                        <div class="bg-rose-100 flex items-center justify-center">
+                            <img src="https://placehold.co/600x400/FBE2E3/450A0A?text=Project+Preview" alt="Project Preview" class="object-cover w-full h-full">
+                        </div>
+                    </div>
+               </div>
+             </div>
+        </section>
+        
+        <!-- Skills & Contact Section -->
+        <section id="skills" class="panel">
+            <div class="w-full max-w-6xl text-center">
+                <div class="gsap-reveal">
+                    <h2 class="text-5xl font-bold text-center mb-4 gsap-reveal-chars">Technical Skills</h2>
+                    <p class="text-center text-gray-600 mb-12">A scrolling showcase of the languages and tools I work with.</p>
+                    <div class="scroller" data-animated="true">
+                        <ul class="scroller__inner">
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>C++</title><path fill="#00599C" d="M14.22.012h-4.44v23.976h4.44V.012zM23.988 9.774h-4.44v4.44h4.44V9.774zM19.548 9.774V5.334h4.44v4.44h-4.44zM19.548 18.666v-4.44h4.44v4.44h-4.44zM4.452 9.774H.012v4.44h4.44V9.774zM0 9.774v4.44H.012V9.774H0zM4.452 5.334V9.774H.012V5.334h4.44zM4.452 14.226v4.44H.012v-4.44h4.44z"/></svg><span>C++</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Python</title><path d="M23.227 11.758c0 3.01-1.393 5.707-3.607 7.525-1.293 1.05-2.81 1.71-4.44 2.01-.7.12-1.41.18-2.12.18-.84 0-1.67-.09-2.48-.26-3.03-.64-5.63-2.5-7.15-5.02-1.3-2.14-1.9-4.63-1.89-7.18.01-3.21 1.3-6.14 3.49-8.31C6.41.35 8.93-.24 11.53 0c.04 0 .09 0 .13.01 3.2.14 6.02 1.83 7.9 4.39 1.93 2.62 2.66 5.82 2.66 8.35v-.006z" fill="#3776AB"/><path d="M11.197 5.448c-1.28 0-2.32 1.04-2.32 2.32 0 1.28 1.04 2.32 2.32 2.32s2.32-1.04 2.32-2.32c0-1.28-1.04-2.32-2.32-2.32zm-3.638 10.772c-1.46.02-2.62 1.2-2.6 2.66.01 1.46 1.2 2.62 2.66 2.6 1.46-.01 2.62-1.2 2.6-2.66-.02-1.46-1.2-2.6-2.66-2.6zm8.85-10.67c-1.46.02-2.62 1.2-2.6 2.66.01 1.46 1.2 2.62 2.66 2.6 1.46-.01 2.62-1.2 2.6-2.66-.02-1.46-1.2-2.6-2.66-2.6zm-2.632 10.38c-1.46.02-2.62 1.2-2.6 2.66.01 1.46 1.2 2.62 2.66 2.6 1.46-.01 2.62-1.2 2.6-2.66-.02-1.46-1.2-2.6-2.66-2.6z" fill="#FFD43B"/></svg><span>Python</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>HTML5</title><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622-13.42-.002.61 6.988H18.3l-.49 5.5-5.89 1.58-5.86-1.56-.39-4.42h2.94l.202 2.28 3.108.81 3.118-.83.34-3.83H5.275l-.61-7.007h15.99l-.643 7.219-5.46 1.45-5.49-1.47-.205-2.264h2.922l.22 2.481z" fill="#E34F26"/></svg><span>HTML</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>CSS3</title><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716-6.64.002.24 2.573h6.182l-.367 3.89-2.91.79-2.903-.793-.18-2.02h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z" fill="#1572B6"/></svg><span>CSS</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>JavaScript</title><path d="M0 0h24v24H0V0zm22.034 18.276c-.472-1.35-.92-2.586-1.594-3.945-2.43-4.835-4.9-9.648-7.34-14.48-1.26-2.51-2.43-2.503-3.69-.013-2.46 4.88-4.92 9.71-7.38 14.58-.52 1.04-.3 1.47.45 1.47h4.08c.54 0 .66-.23.82-.57 1.12-2.28 2.25-4.56 3.37-6.84 1.13-2.29 2.25-4.57 3.38-6.86.11-.23.22-.38.44-.38s.33.15.44.38c1.13 2.29 2.25 4.57 3.38 6.86 1.12 2.28 2.25 4.56 3.37 6.84.16.34.28.57.81.57h4.05c.74 0 1.02-.42.5-1.46z" fill="#F7DF1E"/></svg><span>JavaScript</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>React</title><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 1.636A8.364 8.364 0 1 1 3.636 12 8.364 8.364 0 0 1 12 3.636z" fill="#61DAFB"/><path d="M12 8.182a3.818 3.818 0 1 1 0 7.636 3.818 3.818 0 0 1 0-7.636zm0 1.637a2.182 2.182 0 1 0 0 4.364 2.182 2.182 0 0 0 0-4.364z" fill="#61DAFB"/><ellipse cx="12" cy="12" rx="8.182" ry="3.182" transform="rotate(60 12 12)" fill="none" stroke="#61DAFB" stroke-width="1"/><ellipse cx="12" cy="12" rx="8.182" ry="3.182" transform="rotate(120 12 12)" fill="none" stroke="#61DAFB" stroke-width="1"/><circle cx="12" cy="12" r="1.5" fill="#61DAFB"/></svg><span>React</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Flask</title><path d="M12.001.422a1.88 1.88 0 00-1.879 1.88v4.918a8.312 8.312 0 01-5.996 7.91 1.88 1.88 0 00-1.704 1.85 1.85 1.85 0 001.85 1.85h1.88a1.88 1.88 0 001.88-1.88v-4.918a8.312 8.312 0 015.996-7.91 1.88 1.88 0 001.704-1.85 1.85 1.85 0 00-1.85-1.85h-1.88zm0 8.312a1.88 1.88 0 00-1.879 1.88v4.918a8.312 8.312 0 01-5.996 7.91 1.88 1.88 0 00-1.704 1.85 1.85 1.85 0 001.85 1.85h1.88a1.88 1.88 0 001.88-1.88v-4.918a8.312 8.312 0 015.996-7.91 1.88 1.88 0 001.704-1.85 1.85 1.85 0 00-1.85-1.85h-1.88z" fill="#000"/></svg><span>Flask</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>MySQL</title><path fill="#00758F" d="M12.33 4.22c-1.3-.01-2.58.11-3.82.35l.44 1.9c1.07-.2 2.16-.3 3.24-.3.92 0 1.57.24 1.57.81 0 .42-.3.68-.83.89l-1.4.55c-1.8.7-2.9 1.58-2.9 3.32 0 1.52.98 2.57 2.55 2.92v2.36h1.6v-2.3c.7-.13 1.3-.34 1.83-.61l-.47-1.83c-.47.23-1.03.43-1.62.43-.8 0-1.3-.25-1.3-.8 0-.4.32-.63.85-.85l1.4-.55c1.97-.76 3.08-1.68 3.08-3.4 0-1.8-1.15-2.93-3.04-3.23V4.22zm-2.14 15.3c-2.02.32-3.6.14-4.7-.51-.01 0-.01.01-.01.01l.01-.01c-1.09-.65-1.54-1.63-1.54-2.88 0-2.4 2.14-4.3 5.42-4.3 1.15 0 2.15.2 3.03.55l.39 1.87c-.8-.28-1.67-.44-2.6-.44-2.1 0-3.35 1.1-3.35 2.45 0 .95.75 1.6 1.95 1.6.6 0 1.2-.13 1.7-.35v1.9c-.6.3-1.3.48-2.1.51z"/></svg><span>MySQL</span></li>
+                            <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Git</title><path d="M23.518 10.944c-.24-1.35-1.12-2.43-2.31-2.98-.36-.16-1.1-.47-1.1-.47s.35-.41.35-1.12c0-.5-.13-.93-.4-1.28-.5-.65-1.34-.95-2.26-.95-1.44 0-2.58.8-2.92 1.15-.34.34-.68.8-.84 1.34-.21.67-.21 1.45 0 2.2-.18.02-.37.04-.55.06-2.3.26-4.59 2.3-4.59 5.12 0 2.3 1.4 3.82 2.5 4.61l.13.09c.28.21.57.4.84.57.28.18.52.34.72.43.58.26 1.04.28 1.5.28.48 0 .96-.03 1.5-.28.2-.09.44-.25.72-.43.28-.18.57-.37.84-.57l.13-.09c1.1-.78 2.5-2.3 2.5-4.61 0-2.82-2.29-4.86-4.59-5.12.1-.7.1-1.36-.08-1.95.16-.48.45-.87.82-1.12.3-.2.7-.35 1.16-.35.41 0 .75.1 1.02.31.27.2.4.48.4.82 0 .5-.31.81-.31.81s.7.34.86.58c.15.24.23.54.23.86 0 .5-.13.94-.4 1.3-.27.35-.68.6-1.22.73a14.28 14.28 0 003.5 2.18c.18.1.34.22.48.34.14.13.26.27.35.42.2.33.28.69.28 1.07zM12 4.424c-.64 0-1.2.54-1.2 1.2s.54 1.2 1.2 1.2 1.2-.54 1.2-1.2-.54-1.2-1.2-1.2zm0 15.652c-.64 0-1.2.54-1.2 1.2s.54 1.2 1.2 1.2 1.2-.54 1.2-1.2-.54-1.2-1.2-1.2zm4.24-6.522c-.64 0-1.2.54-1.2 1.2s.54 1.2 1.2 1.2 1.2-.54 1.2-1.2-.54-1.2-1.2-1.2z" fill="#F05032"/></svg><span>Git</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="contact" class="mt-20 gsap-reveal">
+                    <h2 class="text-5xl font-extrabold text-gray-900 gsap-reveal-chars">Let's Build Something Amazing.</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!</p>
+                    <div class="mt-8 flex justify-center items-center space-x-4">
+                        <a href="https://www.linkedin.com/in/srishti-soni-93a5a4230/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
+                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                           <span>LinkedIn</span>
+                        </a>
+                        <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
+                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.107 10-8.107v11.817h-20z"/></svg>
+                           <span>Email Me</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+    
+    <!-- Main Application Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- PRELOADER ---
+            const preloader = document.getElementById('preloader');
+            const preloaderPercent = document.getElementById('preloader-percent');
+            let loaded = 0;
+            const interval = setInterval(() => {
+                loaded++;
+                preloaderPercent.textContent = `${loaded}%`;
+                if (loaded >= 100) {
+                    clearInterval(interval);
+                    gsap.to(preloader, { 
+                        opacity: 0, 
+                        duration: 0.8,
+                        onComplete: () => {
+                            preloader.style.display = 'none';
+                            document.body.classList.add('loaded');
+                            initPageAnimations();
+                        }
+                    });
+                }
+            }, 20);
 
-        <div class="skills-wrap" style="max-width:1100px; margin:0 auto;">
-          <ul class="skills-row" id="skillsRow">
-            <!-- Row duplicated by script for seamless loop -->
-          </ul>
-        </div>
-      </div>
-    </section>
+            function initPageAnimations() {
+                // --- GSAP & SCROLLTRIGGER SETUP ---
+                gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-    <!-- CONTACT -->
-    <section id="contact" class="panel">
-      <div class="container center">
-        <h2 style="font-size: clamp(32px,4.5vw,48px); font-weight:900;">Let's Build Something Amazing.</h2>
-        <p class="mt-4" style="font-size:18px; color:#4B5563; max-width:720px; margin:0 auto;">
-          I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!
-        </p>
-        <div class="mt-8" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-          <a class="btn btn-primary" href="https://www.linkedin.com/in/srishti-soni-93a5a4230/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="btn" style="background:#374151; color:#fff;" href="mailto:imsrishti1202@gmail.com">Email Me</a>
-        </div>
-      </div>
-    </section>
-  </main>
+                const sections = gsap.utils.toArray(".panel");
 
-  <script>
-    // ===============================
-    // Watercolor Clouds + Magic Mist
-    // ===============================
-    (function () {
-      const canvas = document.getElementById('fx-canvas');
-      const ctx = canvas.getContext('2d');
-      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+                // --- ADVANCED TEXT & ELEMENT ANIMATIONS ---
+                sections.forEach((section) => {
+                    const headings = section.querySelectorAll('.gsap-reveal-chars');
+                    headings.forEach(heading => {
+                        const typeSplit = new SplitType(heading, { types: 'chars' });
+                        gsap.from(typeSplit.chars, {
+                            yPercent: 100, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.03,
+                            scrollTrigger: {
+                                trigger: heading,
+                                start: 'top 80%',
+                                toggleActions: 'play none none none',
+                            }
+                        });
+                    });
+                    const simpleReveals = section.querySelectorAll('.gsap-reveal');
+                     gsap.from(simpleReveals, {
+                        y: 50, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.2,
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top center',
+                            toggleActions: 'play none none none',
+                        }
+                    });
+                });
+                
+                gsap.to("#home .gsap-reveal svg", {
+                    yPercent: -20, ease: "none",
+                    scrollTrigger: {
+                        trigger: "#home",
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true,
+                    },
+                });
 
-      function resize() {
-        const w = window.innerWidth, h = window.innerHeight;
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      resize();
-      window.addEventListener('resize', () => requestAnimationFrame(resize));
+                // --- ENHANCED PARTICLE ENGINE ---
+                const canvas = document.getElementById('particle-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                let particles = [];
+                let activeEffects = { sakura: false, leaves: false, clouds: false };
+                const particleConfig = {
+                    sakura: { count: 40, colors: ['#FFC0CB', '#FFB6C1', '#FF69B4'] }, // Increased count
+                    leaves: { count: 20, colors: ['#228B22', '#90EE90', '#4F7942', '#D2691E'] },
+                    clouds: { count: 15, colors: ['rgba(255, 255, 255, 0.8)'] },
+                    dew: { count: 30, colors: ['rgba(255, 255, 255, 0.7)'] }
+                };
 
-      const particles = [];
+                class Particle {
+                    constructor(type, colors) {
+                        this.type = type;
+                        this.color = colors[Math.floor(Math.random() * colors.length)];
+                        this.opacity = 1;
+                        this.life = 0;
+                        this.maxLife = 100;
+                        
+                        if (type === 'sakura') {
+                            this.x = Math.random() * canvas.width;
+                            this.y = Math.random() * canvas.height;
+                            this.size = Math.random() * 2 + 1; // smaller petals
+                            this.speedX = Math.random() * 1 - 0.5;
+                            this.speedY = Math.random() * 0.5 + 0.2;
+                            this.spin = Math.random() * 4 - 2;
+                            this.sway = Math.random() * 4 - 2;
+                        } else if (type === 'clouds') {
+                            this.x = -100;
+                            this.y = Math.random() * (canvas.height * 0.4);
+                            this.size = Math.random() * 25 + 20;
+                            this.speedY = 0;
+                            this.speedX = Math.random() * 0.5 + 0.2;
+                        } else if (type === 'dew') {
+                            this.x = Math.random() * canvas.width;
+                            this.y = Math.random() * canvas.height;
+                            this.size = Math.random() * 5 + 2;
+                            this.speedY = 0;
+                            this.speedX = 0;
+                            this.opacity = 0;
+                        } else { // leaves
+                            this.x = Math.random() * canvas.width;
+                            this.y = -20;
+                            this.size = Math.random() * 5 + 3;
+                            this.speedY = Math.random() * 1 + 0.5;
+                            this.speedX = Math.random() * 2 - 1;
+                            this.rotation = Math.random() * Math.PI * 2;
+                            this.rotationSpeed = (Math.random() - 0.5) * 0.05;
+                        }
+                    }
+                    update() {
+                         if (this.type === 'sakura') {
+                            this.x += this.speedX + Math.sin(this.y / 20) * this.sway;
+                            this.y += this.speedY;
+                            this.size += 0.01;
+                            if (this.y > canvas.height) {
+                               this.reset('sakura');
+                            }
+                        } else {
+                            this.rotation += this.rotationSpeed;
+                            if (this.type === 'dew') {
+                                this.life++;
+                                this.opacity = Math.sin(Math.PI * (this.life / this.maxLife));
+                                if (this.life >= this.maxLife) this.reset('dew');
+                            } else if (this.type === 'clouds') {
+                                this.x += this.speedX;
+                                if (this.x > canvas.width + 100) this.reset(this.type);
+                            } else {
+                                this.y += this.speedY;
+                                this.x += this.speedX;
+                                if (this.y > canvas.height + 20) this.reset(this.type);
+                                if (this.x > canvas.width + 20 || this.x < -20) this.speedX *= -1;
+                            }
+                        }
+                    }
+                    draw() {
+                        ctx.save();
+                        ctx.globalAlpha = this.opacity;
+                        ctx.fillStyle = this.color;
+                        ctx.translate(this.x, this.y);
+                        
+                        if (this.type !== 'sakura') {
+                             ctx.rotate(this.rotation);
+                        }
+                        
+                        ctx.beginPath();
+                        if (this.type === 'clouds') {
+                             const s = this.size;
+                             ctx.moveTo(0,0);
+                             ctx.arc(0, 0, s, 0, Math.PI * 2);
+                             ctx.arc(s * 0.8, -s * 0.5, s * 0.8, 0, Math.PI * 2);
+                             ctx.arc(-s, -s * 0.2, s * 0.9, 0, Math.PI * 2);
+                             ctx.arc(s, s * 0.3, s * 0.7, 0, Math.PI * 2);
+                        } else if (this.type === 'dew') {
+                            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                        } else if (this.type === 'sakura') {
+                             ctx.arc(0, 0, this.size, 0, Math.PI);
+                             ctx.arc(0, this.size, this.size, Math.PI, Math.PI * 2);
+                        } else if (this.type === 'leaves') {
+                            const s = this.size;
+                            ctx.moveTo(0, -s*1.5);
+                            ctx.quadraticCurveTo(s, 0, 0, s*1.5);
+                            ctx.quadraticCurveTo(-s, 0, 0, -s*1.5);
+                        }
+                        ctx.fill();
+                        ctx.closePath();
+                        ctx.restore();
+                    }
+                    reset(type) { Object.assign(this, new Particle(type, particleConfig[type].colors)); }
+                }
+                function createParticles(type) {
+                    const config = particleConfig[type];
+                    if (!config || !config.colors) return;
+                    const count = config.count;
+                    for (let i = 0; i < count; i++) { particles.push(new Particle(type, config.colors)); }
+                }
+                function animateParticles() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles = particles.filter(p => {
+                        if (p.type !== 'dew' && !activeEffects[p.type]) return false;
+                        p.update(); p.draw(); return true;
+                    });
+                    requestAnimationFrame(animateParticles);
+                }
+                createParticles('dew');
+                animateParticles();
+                ScrollTrigger.create({ trigger: '#about', start: 'top center', end: 'bottom center', onEnter: () => { activeEffects.sakura = true; createParticles('sakura'); }, onLeave: () => activeEffects.sakura = false, onEnterBack: () => { activeEffects.sakura = true; createParticles('sakura'); }, onLeaveBack: () => activeEffects.sakura = false });
+                ScrollTrigger.create({ trigger: '#experience', start: 'top center', end: 'bottom center', onEnter: () => { activeEffects.leaves = true; createParticles('leaves'); }, onLeave: () => activeEffects.leaves = false, onEnterBack: () => { activeEffects.leaves = true; createParticles('leaves'); }, onLeaveBack: () => activeEffects.leaves = false });
+                ScrollTrigger.create({ trigger: '#projects', start: 'top center', end: 'bottom center', onEnter: () => { activeEffects.clouds = true; createParticles('clouds'); }, onLeave: () => activeEffects.clouds = false, onEnterBack: () => { activeEffects.clouds = true; createParticles('clouds'); }, onLeaveBack: () => activeEffects.clouds = false });
+                window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-      // init clouds
-      for (let i = 0; i < 10; i++) {
-        particles.push({
-          type: 'cloud',
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight * 0.35,
-          vx: 0.15 + Math.random() * 0.25,
-          size: 50 + Math.random() * 60
+                // --- NAVIGATION ---
+                document.querySelectorAll('header a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetSection = document.querySelector(targetId);
+                        if (targetSection) {
+                            gsap.to(window, { scrollTo: { y: targetSection, autoKill: false }, duration: 1.5, ease: 'power2.inOut' });
+                            const mobileMenu = document.getElementById('mobile-menu');
+                            if(!mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                        }
+                    });
+                });
+
+                // --- SKILL SCROLLER ---
+                const scrollers = document.querySelectorAll(".scroller");
+                if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    scrollers.forEach((scroller) => {
+                        const scrollerInner = scroller.querySelector(".scroller__inner");
+                        if(scroller.dataset.animated) return;
+                        
+                        const scrollerContent = Array.from(scrollerInner.children);
+                        scrollerContent.forEach(item => {
+                            const duplicatedItem = item.cloneNode(true);
+                            duplicatedItem.setAttribute("aria-hidden", true);
+                            scrollerInner.appendChild(duplicatedItem);
+                        });
+                    });
+                }
+                
+                // --- LIQUID IMAGE EFFECT ---
+                const liquidImage = document.querySelector('.liquid-image');
+                if(liquidImage) {
+                    const turbulence = document.querySelector('#liquid-filter feTurbulence');
+                    let turbulenceAnim;
+                    liquidImage.addEventListener('mouseenter', () => {
+                        turbulenceAnim = gsap.to(turbulence.baseFrequency, { 
+                            value: '0.03 0.05', 
+                            duration: 1, 
+                            ease: 'power2.inOut' 
+                        });
+                    });
+                     liquidImage.addEventListener('mouseleave', () => {
+                        if(turbulenceAnim) turbulenceAnim.kill();
+                         gsap.to(turbulence.baseFrequency, { 
+                            value: '0.01 0.03', 
+                            duration: 0.5, 
+                            ease: 'power2.out' 
+                        });
+                    });
+                }
+
+                // --- SVG GOLDEN SNITCH CURSOR ---
+                const snitchCursor = document.getElementById('snitch-cursor');
+                const snitchSvg = document.getElementById('snitch-svg');
+                const leftWing = document.getElementById('left-wing');
+                const rightWing = document.getElementById('right-wing');
+
+                gsap.set(snitchCursor, { xPercent: -50, yPercent: -50 });
+                gsap.set(leftWing, { transformOrigin: '100% 50%' });
+                gsap.set(rightWing, { transformOrigin: '0% 50%' });
+                
+                const tl = gsap.timeline({ repeat: -1, yoyo: true });
+                tl.to(leftWing, { rotation: -35, duration: 0.15, ease: 'sine.inOut' })
+                  .to(rightWing, { rotation: 35, duration: 0.15, ease: 'sine.inOut' }, 0);
+                
+                gsap.to(snitchSvg, { y: -10, duration: 1.2, repeat: -1, yoyo: true, ease: 'sine.inOut'});
+
+                const snitchPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+                const mousePos = { x: snitchPos.x, y: snitchPos.y };
+                const speed = 0.2;
+                const xSet = gsap.quickSetter(snitchCursor, "x", "px");
+                const ySet = gsap.quickSetter(snitchCursor, "y", "px");
+                window.addEventListener('mousemove', e => {
+                    mousePos.x = e.clientX;
+                    mousePos.y = e.clientY;
+                });
+                gsap.ticker.add(() => {
+                    const dt = 1.0 - Math.pow(1.0 - speed, gsap.ticker.deltaRatio()); 
+                    snitchPos.x += (mousePos.x - snitchPos.x) * dt;
+                    snitchPos.y += (mousePos.y - snitchPos.y) * dt;
+                    xSet(snitchPos.x);
+                    ySet(snitchPos.y);
+                });
+
+
+                // --- MAGNETIC BUTTONS ---
+                const magneticElements = document.querySelectorAll('.magnetic-link');
+                magneticElements.forEach(el => {
+                    const strength = 0.5;
+                    el.addEventListener('mousemove', e => {
+                        const rect = el.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        gsap.to(el, { x: x * strength, y: y * strength, duration: 0.4, ease: 'power2.out' });
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
+                    });
+                });
+
+                // --- MOBILE MENU ---
+                document.getElementById('mobile-menu-button').addEventListener('click', () => {
+                    document.getElementById('mobile-menu').classList.toggle('hidden');
+                });
+
+                // --- LABUBU BUBBLE ---
+                const labubuBubble = document.getElementById('labubu-bubble');
+                const labubuText = document.getElementById('labubu-text');
+                let jokeInterval;
+
+                const jokesAndWisdom = [
+                    "My code works. I have no idea why.",
+                    "There are two hard things in programming: naming things, and off-by-one errors.",
+                    "Just git push and pray.",
+                    "Computers are fast; programmers keep them slow.",
+                    "I'm not lazy, I'm on energy-saving mode.",
+                    "Hi!"
+                ];
+                
+                function changeJoke() {
+                    gsap.to(labubuText, {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            const randomIndex = Math.floor(Math.random() * jokesAndWisdom.length);
+                            labubuText.textContent = jokesAndWisdom[randomIndex];
+                            gsap.to(labubuText, { opacity: 1, duration: 0.5 });
+                        }
+                    });
+                }
+                
+                // Show the bubble right away and start the jokes
+                gsap.to(labubuBubble, {
+                    autoAlpha: 1,
+                    scale: 1,
+                    duration: 0.5,
+                    ease: 'back.out(1.7)',
+                    delay: 1 // Add a small delay after page load
+                });
+                labubuText.textContent = "Hi!";
+                if(jokeInterval) clearInterval(jokeInterval);
+                setTimeout(() => {
+                    jokeInterval = setInterval(changeJoke, 4000); // slightly faster with a pause
+                    changeJoke();
+                }, 3000); // Delay the first joke a bit longer
+            }
         });
-      }
-
-      function drawWatercolorCloud(x, y, base) {
-        const blobs = 6;
-        for (let i = 0; i < blobs; i++) {
-          const r = base * (0.45 + Math.random() * 0.85);
-          const ox = x + (Math.random() - 0.5) * base * 1.2;
-          const oy = y + (Math.random() - 0.5) * base * 0.8;
-          const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r);
-          g.addColorStop(0, "rgba(255,255,255,0.55)");
-          g.addColorStop(1, "rgba(173,216,230,0.25)"); // lightSkyBlue
-          ctx.save();
-          ctx.globalAlpha = 0.9;
-          ctx.filter = "blur(1.5px)";
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(ox, oy, r, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      function step() {
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        // subtle sky wash
-        ctx.fillStyle = "rgba(224,242,254,0.15)";
-        ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
-
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const p = particles[i];
-          if (p.type === 'cloud') {
-            p.x += p.vx;
-            if (p.x > window.innerWidth + 120) { p.x = -120; p.y = Math.random() * window.innerHeight * 0.35; }
-            drawWatercolorCloud(p.x, p.y, p.size);
-          } else if (p.type === 'mist') {
-            p.x += p.vx; p.y += p.vy;
-            p.vx *= 0.96; p.vy *= 0.96;
-            p.life += 1;
-            p.opacity = Math.max(0, 0.8 * (1 - p.life / p.maxLife));
-            ctx.save();
-            ctx.globalAlpha = p.opacity;
-            ctx.shadowBlur = 14;
-            ctx.shadowColor = p.color;
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-            ctx.fill();
-            ctx.restore();
-            if (p.life >= p.maxLife) particles.splice(i,1);
-          }
-        }
-        requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-
-      function mistBurst(x, y, count = 50) {
-        for (let i = 0; i < count; i++) {
-          particles.push({
-            type: 'mist',
-            x, y,
-            vx: (Math.random() - 0.5) * 2.2,
-            vy: (Math.random() - 0.5) * 2.2,
-            life: 0,
-            maxLife: 40 + Math.random() * 30,
-            size: 6 + Math.random() * 12,
-            opacity: 0.8,
-            color: Math.random() < 0.5 ? "rgba(255,255,255,0.6)" : "rgba(244,63,94,0.35)"
-          });
-        }
-      }
-
-      const brand = document.getElementById('brandName');
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-
-      if (!prefersReduced && hasFinePointer) {
-        brand.addEventListener('mouseenter', (e) => mistBurst(e.clientX, e.clientY, 60));
-        brand.addEventListener('mousemove', (e) => mistBurst(e.clientX, e.clientY, 10));
-      }
-
-      // Build skills row (duplicated for seamless loop)
-      const SKILLS = ["C++","Python","HTML","CSS","JavaScript","React","Flask","MySQL","Git"];
-      const row = document.getElementById('skillsRow');
-      function renderChips(arr, ariaHidden=false) {
-        arr.forEach(s => {
-          const li = document.createElement('li');
-          li.className = 'chip';
-          if (ariaHidden) li.setAttribute('aria-hidden','true');
-          li.textContent = s;
-          row.appendChild(li);
-        });
-      }
-      renderChips(SKILLS, false);
-      renderChips(SKILLS, true);
-    })();
-  </script>
+    </script>
 </body>
 </html>
