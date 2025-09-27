@@ -179,7 +179,10 @@
         .skill-item span { font-weight: 500; font-size: 1rem; color: #374151; }
 
         /* GSAP animation prep for SplitType */
-        .gsap-reveal-chars .char {
+        .gsap-reveal-chars {
+             opacity: 1;
+        }
+        .gsap-reveal-chars.split-initialized .char {
              opacity: 0;
              transform: translateY(100%);
         }
@@ -285,68 +288,67 @@
             100% { transform: translate3d(-400px,1280px,0) rotate(0deg); opacity: 0; }
         }
 
-        /* Sakura Petals CSS */
+        /* Sakura Petals CSS - Fixed with nested elements */
         #sakura {
             position: fixed;
-            pointer-events: none;
             inset: 0;
+            pointer-events: none;
             overflow: hidden;
             z-index: 40;
             opacity: 0;
             visibility: hidden;
         }
-        #sakura-about .petal {
+
+        /* OUTER: only vertical fall + slight Z-rotate */
+        #sakura .petal {
             position: absolute;
-            top: -5vh;
+            top: -8vh;
             left: calc(var(--x, 50) * 1%);
+            animation: petal-fall var(--dur, 12s) linear infinite;
+            will-change: transform;
+        }
+
+        /* INNER SHAPE: color/shape + sway + spin */
+        #sakura .petal .shape {
+            display: block;
             width: 12px;
             height: 18px;
             background: radial-gradient(75% 85% at 50% 55%, #ffd1e3 0 60%, #f8a1c4 61% 100%);
             border-radius: 60% 60% 80% 80% / 70% 70% 30% 30%;
-            transform: rotate(0deg) translateZ(0);
-            opacity: 0.9;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,.08));
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,.15));
             animation:
-                fall var(--dur, 10s) linear infinite,
-                sway var(--swayDur, 3.5s) ease-in-out infinite,
-                spin var(--spinDur, 4.8s) ease-in-out infinite;
-            will-change: transform;
+                petal-sway var(--swayDur, 3.6s) ease-in-out infinite,
+                petal-spin var(--spinDur, 5s) ease-in-out infinite;
+            transform-origin: 50% 50%;
         }
-        #sakura .petal:nth-child(3n) {
-            width: 10px; height: 16px; opacity: .85;
+
+        /* variety */
+        #sakura .petal:nth-child(3n) .shape {
+            width: 10px;
+            height: 16px;
             background: radial-gradient(75% 85% at 50% 55%, #ffe0eb 0 60%, #f59abf 61% 100%);
-            border-radius: 55% 65% 80% 80% / 70% 70% 30% 30%;
         }
-        #sakura .petal:nth-child(5n) {
-            width: 14px; height: 20px; opacity: .95;
+        #sakura .petal:nth-child(5n) .shape {
+            width: 14px;
+            height: 20px;
             background: radial-gradient(75% 85% at 50% 55%, #ffcee2 0 60%, #f485b4 61% 100%);
         }
-        #sakura .petal:nth-child(n)   { animation-delay: -1s; }
-        #sakura .petal:nth-child(2n)  { animation-delay: -1.6s; }
-        #sakura .petal:nth-child(3n)  { animation-delay: -2.2s; }
-        #sakura .petal:nth-child(4n)  { animation-delay: -0.8s; }
 
-        #sakura .petal:nth-child(n)   { --dur: 11s; --swayDur: 3.8s; --spinDur: 5.2s; }
-        #sakura .petal:nth-child(2n)  { --dur: 12.5s; --swayDur: 4.2s; --spinDur: 4.6s; }
-        #sakura .petal:nth-child(3n)  { --dur: 10.5s; --swayDur: 3.2s; --spinDur: 6.1s; }
-        #sakura .petal:nth-child(4n)  { --dur: 13.5s; --swayDur: 4.8s; --spinDur: 5.6s; }
-
-        @keyframes fall {
-            0%   { transform: translate3d(0, -8vh, 0) rotate(0deg); opacity: 0; }
-            5%   { opacity: .95; }
-            100% { transform: translate3d(0, 110vh, 0) rotate(90deg); opacity: 0; }
+        /* keyframes */
+        @keyframes petal-fall {
+            0%   { transform: translateY(-8vh) rotate(0deg); opacity: 0; }
+            5%   { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(90deg); opacity: 0; }
         }
-        @keyframes sway {
+        @keyframes petal-sway {
             0%   { transform: translateX(0); }
             50%  { transform: translateX(18px); }
             100% { transform: translateX(0); }
         }
-        @keyframes spin {
+        @keyframes petal-spin {
             0%   { transform: rotateX(0) rotateY(0) rotateZ(0); }
-            25%  { transform: rotateX(35deg) rotateY(0)  rotateZ(15deg); }
             50%  { transform: rotateX(35deg) rotateY(35deg) rotateZ(0); }
-            75%  { transform: rotateX(0)  rotateY(35deg) rotateZ(-10deg); }
-            100% { transform: rotateX(0)  rotateY(0)  rotateZ(0); }
+            100% { transform: rotateX(0) rotateY(0) rotateZ(0); }
         }
     </style>
 </head>
@@ -455,9 +457,6 @@
         
         <!-- About Me Section -->
 <section id="about" class="panel relative overflow-hidden">
-  <!-- petals background -->
-  <div id="sakura-about" class="pointer-events-none absolute inset-0 z-0"></div>
-
   <!-- smaller white card -->
   <div class="relative z-10 bg-white rounded-2xl shadow-lg max-w-3xl mx-auto p-10">
     <h2 class="text-5xl font-bold mb-6 gsap-reveal-chars section-heading">About Me</h2>
@@ -622,15 +621,22 @@
                 sections.forEach((section) => {
                     const headings = section.querySelectorAll('.gsap-reveal-chars');
                     headings.forEach(heading => {
-                        const typeSplit = new SplitType(heading, { types: 'chars' });
-                        gsap.from(typeSplit.chars, {
-                            yPercent: 100, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.03,
-                            scrollTrigger: {
-                                trigger: heading,
-                                start: 'top 80%',
-                                toggleActions: 'play none none none',
-                            }
-                        });
+                        try {
+                            const typeSplit = new SplitType(heading, { types: 'chars' });
+                            heading.classList.add('split-initialized');
+                            gsap.from(typeSplit.chars, {
+                                yPercent: 100, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.03,
+                                scrollTrigger: {
+                                    trigger: heading,
+                                    start: 'top 80%',
+                                    toggleActions: 'play none none none',
+                                }
+                            });
+                        } catch (error) {
+                            console.warn('SplitType animation failed for heading:', heading, error);
+                            // Fallback: ensure heading is visible
+                            heading.style.opacity = '1';
+                        }
                     });
                     const simpleReveals = section.querySelectorAll('.gsap-reveal');
                      gsap.from(simpleReveals, {
@@ -765,15 +771,23 @@
                     });
                 });
                 
-                // Create Sakura Petals dynamically
-               const sakuraAbout = document.getElementById('sakura-about');
-for (let i = 0; i < 70; i++) {
-  const petal = document.createElement('span');
-  petal.className = 'petal';
-  petal.style.setProperty('--x', Math.random() * 100);
-  petal.style.setProperty('--i', i);
-  sakuraAbout.appendChild(petal);
-}
+                // Create Sakura Petals dynamically with nested structure
+                const sakura = document.getElementById('sakura');
+                const petalCount = 80;
+                for (let i = 0; i < petalCount; i++) {
+                    const outer = document.createElement('span');
+                    outer.className = 'petal';
+                    outer.style.setProperty('--x', (Math.random() * 100).toFixed(2));
+                    outer.style.setProperty('--dur', (10 + Math.random() * 4).toFixed(2) + 's');
+                    outer.style.setProperty('--swayDur', (3 + Math.random() * 2).toFixed(2) + 's');
+                    outer.style.setProperty('--spinDur', (4 + Math.random() * 2).toFixed(2) + 's');
+
+                    const inner = document.createElement('span');
+                    inner.className = 'shape';
+
+                    outer.appendChild(inner);
+                    sakura.appendChild(outer);
+                }
 
                 // --- SKILL SCROLLER ---
                 const scrollers = document.querySelectorAll(".scroller");
