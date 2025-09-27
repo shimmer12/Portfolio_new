@@ -135,7 +135,7 @@
             padding: 8rem 2rem;
             overflow: hidden;
         }
-        #about, #projects { background-color: white; }
+        #about, #projects { background-color: transparent !important;}
 
         /* Specific panel styles */
         #home .grid { width: 100%; max-width: 1200px; }
@@ -291,11 +291,11 @@
             pointer-events: none;
             inset: 0;
             overflow: hidden;
-            z-index: -1;
+            z-index: 40;
             opacity: 0;
             visibility: hidden;
         }
-        #sakura .petal {
+        #sakura-about .petal {
             position: absolute;
             top: -5vh;
             left: calc(var(--x, 50) * 1%);
@@ -321,10 +321,10 @@
             width: 14px; height: 20px; opacity: .95;
             background: radial-gradient(75% 85% at 50% 55%, #ffcee2 0 60%, #f485b4 61% 100%);
         }
-        #sakura .petal:nth-child(n)   { animation-delay: calc(-1s * (var(--i, 0) % 7)); }
-        #sakura .petal:nth-child(2n)  { animation-delay: calc(-1.6s * (var(--i, 0) % 5)); }
-        #sakura .petal:nth-child(3n)  { animation-delay: calc(-2.2s * (var(--i, 0) % 9)); }
-        #sakura .petal:nth-child(4n)  { animation-delay: calc(-.8s * (var(--i, 0) % 11)); }
+        #sakura .petal:nth-child(n)   { animation-delay: -1s; }
+        #sakura .petal:nth-child(2n)  { animation-delay: -1.6s; }
+        #sakura .petal:nth-child(3n)  { animation-delay: -2.2s; }
+        #sakura .petal:nth-child(4n)  { animation-delay: -0.8s; }
 
         #sakura .petal:nth-child(n)   { --dur: 11s; --swayDur: 3.8s; --spinDur: 5.2s; }
         #sakura .petal:nth-child(2n)  { --dur: 12.5s; --swayDur: 4.2s; --spinDur: 4.6s; }
@@ -420,7 +420,12 @@
         <section id="home" class="panel">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="text-center md:text-left">
+                     <div class="mt-6 gsap-reveal">
+    <img src="image_478ee1.png" alt="Srishti Soni"
+         class="mx-auto md:mx-0 rounded-full shadow-2xl w-52 h-52 object-cover" />
+  </div>
                     <h1 class="text-6xl md:text-7xl font-extrabold text-gray-900 leading-tight gsap-reveal-chars">Software Developer & Creative Problem Solver</h1>
+                    
                     <p class="mt-6 text-lg text-gray-600 max-w-xl mx-auto md:mx-0 gsap-reveal">I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.</p>
                     <div class="mt-8 flex justify-center md:justify-start items-center space-x-4 gsap-reveal">
                          <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover">Get in Touch</a>
@@ -449,33 +454,34 @@
         </section>
         
         <!-- About Me Section -->
-        <section id="about" class="panel bg-white">
-            <div class="flex flex-col items-center gap-12 max-w-3xl mx-auto">
-                <div class="text-center">
-                    <h2 class="text-5xl font-bold mb-6 gsap-reveal-chars section-heading">About Me</h2>
-                    <p class="text-xl text-gray-600 gsap-reveal">Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.</p>
-                     <ul class="mt-6 text-lg text-gray-700 space-y-3 text-left max-w-xl mx-auto">
-                        <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Problem Solving:</strong> Honed my skills by solving 1000+ questions on LeetCode, maintaining a 600-day streak.</li>
-                        <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Technical Proficiency:</strong> Strong foundation in Data Structures & Algorithms and full-stack web development.</li>
-                        <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Practical Experience:</strong> Applied my knowledge through impactful projects and professional internship experiences.</li>
-                    </ul>
-                    <div class="mt-8 flex justify-center space-x-6 gsap-reveal">
-                        <a href="https://github.com/shimmer12" target="_blank" class="text-gray-500 hover:text-rose-600 transition-transform duration-300 hover:scale-110">
-                           <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
-                        </a>
-                        <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="text-gray-500 hover:text-rose-600 transition-transform duration-300 hover:scale-110">
-                           <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                        </a>
-                        <a href="https://leetcode.com/u/shimmer2002/" target="_blank" class="text-gray-500 hover:text-rose-600 transition-transform duration-300 hover:scale-110">
-                            <svg class="w-8 h-8" fill="currentColor" role="img" viewBox="0 0 24 24"><title>LeetCode</title><path d="M13.48 4.26a1.4 1.4 0 0 0-1.4-.26l-6 2A1.4 1.4 0 0 0 5 7.4v9.2a1.4 1.4 0 0 0 .8.86l6 2a1.4 1.4 0 0 0 1.4-.26l6-2A1.4 1.4 0 0 0 20.2 16.6V7.4a1.4 1.4 0 0 0-.8-.86l-6-2ZM13 18.38l-4-1.33V9.42l4 1.33v7.63Zm5-2.71l-4 1.33V10.75l4-1.33v6.55Z"/></svg>
-                        </a>
-                    </div>
-                </div>
-                <div class="flex justify-center items-center gsap-reveal">
-                    <img src="image_478ee1.png" alt="Srishti Soni" class="rounded-full shadow-2xl w-80 h-80 object-cover">
-                </div>
-            </div>
-        </section>
+<section id="about" class="panel relative overflow-hidden">
+  <!-- petals background -->
+  <div id="sakura-about" class="pointer-events-none absolute inset-0 z-0"></div>
+
+  <!-- smaller white card -->
+  <div class="relative z-10 bg-white rounded-2xl shadow-lg max-w-3xl mx-auto p-10">
+    <h2 class="text-5xl font-bold mb-6 gsap-reveal-chars section-heading">About Me</h2>
+    <p class="text-xl text-gray-600 gsap-reveal">
+      Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.
+    </p>
+
+    <ul class="mt-6 text-lg text-gray-700 space-y-3 text-left">
+      <li class="flex items-start gsap-reveal">
+        <span class="text-rose-500 font-bold mr-3">&rarr;</span> 
+        <strong>Problem Solving:</strong> Solved 1000+ questions on LeetCode, 600-day streak.
+      </li>
+      <li class="flex items-start gsap-reveal">
+        <span class="text-rose-500 font-bold mr-3">&rarr;</span> 
+        <strong>Technical Proficiency:</strong> Strong in DSA & full-stack web development.
+      </li>
+      <li class="flex items-start gsap-reveal">
+        <span class="text-rose-500 font-bold mr-3">&rarr;</span> 
+        <strong>Practical Experience:</strong> Projects and internships at NTPC & CSPDCL.
+      </li>
+    </ul>
+  </div>
+</section>
+
 
         <!-- Experience Section -->
         <section id="experience" class="panel">
@@ -760,15 +766,14 @@
                 });
                 
                 // Create Sakura Petals dynamically
-                const sakura = document.getElementById('sakura');
-                const petalCount = 80;
-                for (let i = 0; i < petalCount; i++) {
-                    const petal = document.createElement('span');
-                    petal.className = 'petal';
-                    petal.style.setProperty('--x', Math.random() * 100);
-                    petal.style.setProperty('--i', i);
-                    sakura.appendChild(petal);
-                }
+               const sakuraAbout = document.getElementById('sakura-about');
+for (let i = 0; i < 70; i++) {
+  const petal = document.createElement('span');
+  petal.className = 'petal';
+  petal.style.setProperty('--x', Math.random() * 100);
+  petal.style.setProperty('--i', i);
+  sakuraAbout.appendChild(petal);
+}
 
                 // --- SKILL SCROLLER ---
                 const scrollers = document.querySelectorAll(".scroller");
