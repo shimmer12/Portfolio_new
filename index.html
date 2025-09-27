@@ -187,6 +187,27 @@
              transform: translateY(100%);
         }
         
+        /* Ensure visibility for gsap-reveal elements */
+        .gsap-reveal {
+            opacity: 1;
+        }
+        
+        /* Remove transitions from GSAP animated elements */
+        .gsap-reveal, .gsap-reveal-chars, .magnetic-link {
+            transition: none !important;
+        }
+        
+        /* Only apply transitions to non-GSAP elements */
+        .hover-transition {
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        
+        /* Better positioning for sparkle effects */
+        .sparkle-hover {
+            position: relative;
+            overflow: hidden;
+        }
+        
         /* CSS Leaf Animations from CodePen */
         #leaves {
             position: absolute;
@@ -339,7 +360,7 @@
         /* Size/variety */
         #sakura-about .petal:nth-child(3n) .shape {
             width: 12px;
-            height: 17px;
+            height: 20px;
             transform: rotate(-8deg);
         }
         #sakura-about .petal:nth-child(5n) .shape {
@@ -418,22 +439,22 @@
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#home" id="logo-name" class="text-gray-900 magnetic-link">Srishti Soni</a>
             <div class="hidden md:flex items-center space-x-2">
-                <a href="#about" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">About</a>
-                <a href="#experience" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">Experience</a>
-                <a href="#projects" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">Projects</a>
-                <a href="#skills" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">Skills</a>
-                <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-px magnetic-link sparkle-hover">Contact</a>
+                <a href="#about" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">About</a>
+                <a href="#experience" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Experience</a>
+                <a href="#projects" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Projects</a>
+                <a href="#skills" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Skills</a>
+                <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 hover-transition shadow-sm hover:shadow-md magnetic-link sparkle-hover">Contact</a>
             </div>
              <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             </button>
         </nav>
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2 bg-white/90">
-             <a href="#about" class="block text-gray-600 hover:text-rose-600 transition duration-300">About</a>
-             <a href="#experience" class="block text-gray-600 hover:text-rose-600 transition duration-300">Experience</a>
-             <a href="#projects" class="block text-gray-600 hover:text-rose-600 transition duration-300">Projects</a>
-             <a href="#skills" class="block text-gray-600 hover:text-rose-600 transition duration-300">Skills</a>
-             <a href="#contact" class="block bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 transition duration-300 mt-2 text-center">Contact</a>
+             <a href="#about" class="block text-gray-600 hover:text-rose-600 hover-transition">About</a>
+             <a href="#experience" class="block text-gray-600 hover:text-rose-600 hover-transition">Experience</a>
+             <a href="#projects" class="block text-gray-600 hover:text-rose-600 hover-transition">Projects</a>
+             <a href="#skills" class="block text-gray-600 hover:text-rose-600 hover-transition">Skills</a>
+             <a href="#contact" class="block bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover-transition mt-2 text-center">Contact</a>
         </div>
     </header>
 
@@ -637,6 +658,12 @@
             function initPageAnimations() {
                 // --- GSAP & SCROLLTRIGGER SETUP ---
                 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+                
+                // Clean up any existing ScrollTriggers
+                ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+                
+                // Enable ScrollTrigger debugging (comment out in production)
+                // ScrollTrigger.defaults({ markers: true });
 
                 const sections = gsap.utils.toArray(".panel");
 
@@ -644,31 +671,65 @@
                 sections.forEach((section) => {
                     const headings = section.querySelectorAll('.gsap-reveal-chars');
                     headings.forEach(heading => {
+                        // Set initial visibility
+                        heading.style.opacity = '1';
+                        
                         try {
                             const typeSplit = new SplitType(heading, { types: 'chars' });
                             heading.classList.add('split-initialized');
-                            gsap.from(typeSplit.chars, {
-                                yPercent: 100, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.03,
+                            
+                            // Set initial state for chars
+                            gsap.set(typeSplit.chars, { yPercent: 100, opacity: 0 });
+                            
+                            // Animate from initial state
+                            gsap.to(typeSplit.chars, {
+                                yPercent: 0, 
+                                opacity: 1, 
+                                duration: 0.6, 
+                                ease: 'power3.out', 
+                                stagger: 0.03,
                                 scrollTrigger: {
                                     trigger: heading,
                                     start: 'top 80%',
                                     toggleActions: 'play none none none',
+                                    onComplete: () => {
+                                        // Ensure heading remains visible after animation
+                                        heading.style.opacity = '1';
+                                    }
                                 }
                             });
                         } catch (error) {
                             console.warn('SplitType animation failed for heading:', heading, error);
                             // Fallback: ensure heading is visible
                             heading.style.opacity = '1';
+                            heading.style.transform = 'none';
                         }
                     });
                     const simpleReveals = section.querySelectorAll('.gsap-reveal');
-                     gsap.from(simpleReveals, {
-                        y: 50, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.2,
-                        scrollTrigger: {
-                            trigger: section,
-                            start: 'top center',
-                            toggleActions: 'play none none none',
-                        }
+                    simpleReveals.forEach(reveal => {
+                        // Ensure element is visible by default
+                        reveal.style.opacity = '1';
+                        
+                        gsap.fromTo(reveal, 
+                            {
+                                y: 50, 
+                                opacity: 0
+                            },
+                            {
+                                y: 0,
+                                opacity: 1, 
+                                duration: 1, 
+                                ease: 'power3.out',
+                                scrollTrigger: {
+                                    trigger: reveal,
+                                    start: 'top 80%',
+                                    toggleActions: 'play none none none',
+                                    onComplete: () => {
+                                        reveal.style.opacity = '1';
+                                    }
+                                }
+                            }
+                        );
                     });
                 });
                 
@@ -880,6 +941,12 @@
                 // --- SPARKLE EFFECT ---
                 const sparkleElements = document.querySelectorAll('.sparkle-hover');
                 sparkleElements.forEach(el => {
+                    // Ensure the element has relative positioning for absolute children
+                    const computedStyle = window.getComputedStyle(el);
+                    if (computedStyle.position === 'static') {
+                        el.style.position = 'relative';
+                    }
+                    
                     el.addEventListener('mousemove', e => {
                         const rect = el.getBoundingClientRect();
                         const x = e.clientX - rect.left;
@@ -891,18 +958,34 @@
                         sparkle.style.top = `${y}px`;
                         sparkle.style.width = '2px';
                         sparkle.style.height = '2px';
-                        sparkle.style.backgroundColor = 'silver';
+                        sparkle.style.backgroundColor = '#C0C0C0'; // Silver
                         sparkle.style.borderRadius = '50%';
                         sparkle.style.pointerEvents = 'none';
+                        sparkle.style.zIndex = '1000';
+                        sparkle.style.transform = 'translate(-50%, -50%)';
                         el.appendChild(sparkle);
 
-                        gsap.to(sparkle, {
-                            scale: gsap.utils.random(4, 8),
-                            opacity: 0,
-                            duration: 0.6,
-                            ease: 'power2.out',
-                            onComplete: () => sparkle.remove()
-                        });
+                        // Add some randomness to the sparkle colors
+                        const colors = ['#C0C0C0', '#9932CC', '#DA70D6', '#DDA0DD'];
+                        sparkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                        gsap.fromTo(sparkle, 
+                            { 
+                                scale: 0, 
+                                opacity: 1 
+                            },
+                            {
+                                scale: gsap.utils.random(4, 8),
+                                opacity: 0,
+                                duration: 0.6,
+                                ease: 'power2.out',
+                                onComplete: () => {
+                                    if (sparkle.parentNode) {
+                                        sparkle.remove();
+                                    }
+                                }
+                            }
+                        );
                     });
                 });
 
@@ -945,7 +1028,12 @@
                 setTimeout(() => {
                     jokeInterval = setInterval(changeJoke, 6000); 
                     changeJoke();
-                }, 3000); 
+                }, 3000);
+                
+                // Final ScrollTrigger refresh to ensure all animations are properly initialized
+                setTimeout(() => {
+                    ScrollTrigger.refresh();
+                }, 100);
             }
         });
     </script>
