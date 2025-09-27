@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Srishti Soni - Portfolio</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root { --rose-700:#BE123C; --rose-500:#F43F5E; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; }
+    body {
+      font-family:'Roboto',sans-serif;
+      background:#FFF8F7;
+      color:#111827; /* gray-900 */
+      overflow-x:hidden;
+    }
+    h1,h2,h3,h4,h5,h6 { font-family:'Montserrat',sans-serif; }
+
+    /* Navbar */
+    header {
+      position:fixed; top:0; left:0; right:0; z-index:50;
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.7);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    nav { max-width:1100px; margin:0 auto; padding:16px 24px; display:flex; justify-content:space-between; align-items:center; }
+    nav a { color:#374151; text-decoration:none; margin:0 6px; padding:8px 12px; border-radius:8px; }
+    nav a:hover { color:var(--rose-700); background: rgba(190,18,60,.06); }
+    .cta { background:var(--rose-700); color:#fff !important; }
+    .cta:hover { background:var(--rose-500); }
+
+    /* Brand gradient text */
+    .brand-name{
+      font-family:'Montserrat',sans-serif;
+      font-weight:900;
+      letter-spacing:.4px;
+      background:linear-gradient(90deg,#f43f5e,#f59e0b,#22d3ee,#f43f5e);
+      background-size:200% 100%;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow:0 0 12px rgba(244,63,94,.15);
+      animation:brandWave 8s linear infinite;
+      cursor:pointer;
+    }
+    @keyframes brandWave { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+    .brand-name:hover{ text-shadow:0 0 18px rgba(244,63,94,.35); }
+
+    /* Sections */
+    main { margin-top:74px; }
+    section.panel {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:80px 24px;
+      position:relative;
+    }
+    .container { width:100%; max-width:1100px; margin:0 auto; }
+    .grid { display:grid; gap:48px; grid-template-columns:1fr; }
+    @media (min-width: 860px) { .grid { grid-template-columns:1fr 1fr; } }
+    .btn {
+      display:inline-block; padding:12px 20px; border-radius:9999px;
+      text-decoration:none; font-weight:600; transition:.2s;
+    }
+    .btn-primary { background:var(--rose-700); color:#fff; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.12); background:var(--rose-500); }
+    .btn-link { color:#374151; font-weight:600; }
+    .btn-link:hover { color:var(--rose-700); }
+
+    /* Timeline contrast bump */
+    .timeline { position:relative; }
+    .timeline::before {
+      content:''; position:absolute; left: -20px; top:0; bottom:0; width:2px; background:#fecaca; /* rose-200 */
+    }
+    .timeline-item { position:relative; padding-left:28px; margin-bottom:32px; }
+    .timeline-item::before {
+      content:''; position:absolute; left:-30px; top:10px; width:20px; height:20px; border-radius:50%;
+      background:#FBE2E3; border:4px solid var(--rose-700);
+    }
+
+    /* Skills marquee */
+    .skills-wrap { overflow:hidden; -webkit-mask:linear-gradient(90deg,transparent,white 15%,white 85%,transparent); mask:linear-gradient(90deg,transparent,white 15%,white 85%,transparent); }
+    .skills-row { display:flex; gap:12px; width:max-content; animation:marquee 20s linear infinite; }
+    .chip {
+      display:flex; align-items:center; gap:8px; padding:10px 14px; background:#fff; border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,.06); white-space:nowrap; color:#374151;
+    }
+    @keyframes marquee { to { transform: translateX(calc(-50% - 12px)); } }
+
+    /* Leaves (CodePen-style) */
+    #leaves { position:relative; top:-50px; width:100%; text-align:right; }
+    #leaves i {
+      display:inline-block; width:200px; height:150px;
+      background: linear-gradient(to bottom right, #309900, #005600);
+      transform: skew(20deg) rotate(180deg);
+      border-radius: 5% 40% 70%;
+      box-shadow: inset 0 0 1px #222;
+      border: 1px solid #333;
+      z-index:1;
+      animation: falling 5s 0s infinite ease-in-out;
+    }
+    #leaves i:nth-of-type(2n){ animation-name: falling2; }
+    #leaves i:nth-of-type(3n){ animation-name: falling3; }
+    #leaves i:before {
+      position:absolute; content:''; top:117px; right:9px; height:27px; width:32px; transform: rotate(49deg);
+      border-radius: 0% 15% 15% 0%;
+      border-top:1px solid #222; border-bottom:1px solid #222; border-right:1px solid #222;
+      background: linear-gradient(to right, rgba(0,100,0,1), #005600);
+      z-index:1;
+    }
+    #leaves i:after {
+      content:''; height:125px; width:10px; background: linear-gradient(to right, rgba(0,0,0,.15), rgba(0,0,0,0));
+      display:block; transform: rotate(125deg); position:absolute; left:85px; border-radius:50%;
+    }
+    #leaves i:nth-of-type(n)    { height:23px; width:30px; opacity:.7; }
+    #leaves i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
+    #leaves i:nth-of-type(n):after  { width:2px; height:17px; left:12px; top:0px; }
+    #leaves i:nth-of-type(2n+1)    { height:11px; width:16px; opacity:.5; }
+    #leaves i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0; }
+    #leaves i:nth-of-type(2n+1):after  { width:2px; height:6px; left:5px; top:1px; }
+    #leaves i:nth-of-type(3n+2)  { height:17px; width:23px; opacity:.3; }
+    #leaves i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
+    #leaves i:nth-of-type(3n+2):after   { height:10px; width:2px; top:1px; left:8px; }
+
+    #leaves i:nth-of-type(2n+2){ background: linear-gradient(to bottom right, #5e9900, #2b5600); }
+    #leaves i:nth-of-type(4n+1){ background: linear-gradient(to bottom right, #999900, #564500); }
+
+    #leaves i:nth-of-type(n)    { animation-delay: 1.9s;}
+    #leaves i:nth-of-type(2n)   { animation-delay: 3.9s;}
+    #leaves i:nth-of-type(3n)   { animation-delay: 2.3s;}
+    #leaves i:nth-of-type(4n)   { animation-delay: 4.4s;}
+    #leaves i:nth-of-type(5n)   { animation-delay: 5s;}
+    #leaves i:nth-of-type(6n)   { animation-delay: 3.5s;}
+    #leaves i:nth-of-type(7n)   { animation-delay: 2.8s;}
+    #leaves i:nth-of-type(8n)   { animation-delay: 1.5s;}
+    #leaves i:nth-of-type(9n)   { animation-delay: 3.3s;}
+    #leaves i:nth-of-type(10n)  { animation-delay: 2.5s;}
+    #leaves i:nth-of-type(11n)  { animation-delay: 1.2s;}
+    #leaves i:nth-of-type(12n)  { animation-delay: 4.1s;}
+    #leaves i:nth-of-type(13n)  { animation-delay: 1s;}
+    #leaves i:nth-of-type(14n)  { animation-delay: 4.7s;}
+    #leaves i:nth-of-type(15n)  { animation-delay: 3s;}
+
+    @keyframes falling{
+      from{ transform: translate3d(300px,0,0) rotate(180deg); }
+      to  { transform: translate3d(-350px,700px,0) rotate(270deg); opacity:0; }
+    }
+    @keyframes falling2{
+      from{ transform: translate3d(0,0,0) rotate(270deg); }
+      to  { transform: translate3d(-400px,680px,0) rotate(180deg); opacity:0; }
+    }
+    @keyframes falling3{
+      from{ transform: translate3d(0,0,0) rotate(160deg); }
+      to  { transform: translate3d(-230px,640px,0) rotate(110deg); opacity:0; }
+    }
+
+    /* Cloud/mist canvas */
+    #fx-canvas {
+      position:fixed; inset:0; width:100vw; height:100vh; z-index:-1; pointer-events:none;
+      display:block;
+    }
+
+    /* Helpers */
+    .mb-0 { margin-bottom:0; }
+    .mb-2 { margin-bottom:.5rem; }
+    .mb-3 { margin-bottom:.75rem; }
+    .mb-4 { margin-bottom:1rem; }
+    .mb-6 { margin-bottom:1.5rem; }
+    .mb-8 { margin-bottom:2rem; }
+    .mb-12{ margin-bottom:3rem; }
+    .mt-2 { margin-top:.5rem; }
+    .mt-4 { margin-top:1rem; }
+    .mt-6 { margin-top:1.5rem; }
+    .mt-8 { margin-top:2rem; }
+    .mt-16{ margin-top:4rem; }
+    .center { text-align:center; }
+    .card {
+      background:#fff; border-radius:12px; padding:24px;
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+    }
+    a { color:inherit; }
+  </style>
+</head>
+<body>
+  <!-- Watercolor sky + mist -->
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+  <header>
+    <nav>
+      <a class="brand-name" id="brandName">Srishti Soni</a>
+      <div class="links">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact" class="cta">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="home" class="panel">
+      <div class="container">
+        <div class="grid">
+          <div>
+            <h1 style="font-size: clamp(40px,6vw,64px); line-height:1.05; font-weight:800;">
+              Software Developer & Creative Problem Solver
+            </h1>
+            <p class="mt-6" style="font-size:18px; color:#4B5563; max-width:560px;">
+              I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.
+            </p>
+            <div class="mt-8" style="display:flex; gap:12px; flex-wrap:wrap;">
+              <a class="btn btn-primary" href="mailto:imsrishti1202@gmail.com">Get in Touch</a>
+              <a class="btn btn-link" href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+                Download Resume →
+              </a>
+            </div>
+          </div>
+          <div class="center">
+            <svg class="illustration" width="320" height="320" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <linearGradient id="postGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FDE047"/>
+                  <stop offset="100%" stop-color="#F59E0B"/>
+                </linearGradient>
+              </defs>
+              <rect x="40" y="50" width="10" height="150" fill="url(#postGradient)" rx="5"></rect>
+              <rect x="95" y="30" width="10" height="170" fill="url(#postGradient)" rx="5"></rect>
+              <rect x="150" y="50" width="10" height="150" fill="url(#postGradient)" rx="5"></rect>
+              <circle cx="45" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none"></circle>
+              <circle cx="100" cy="30" r="25" stroke="url(#postGradient)" stroke-width="8" fill="none"></circle>
+              <circle cx="155" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none"></circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- CodePen-style leaves floating near top -->
+      <div id="leaves" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="panel" style="background:#fff;">
+      <div class="container center">
+        <h2 style="font-size: clamp(32px,4.5vw,48px); font-weight:800;" class="mb-6">About Me</h2>
+        <p style="font-size:20px; color:#4B5563; max-width:760px; margin:0 auto;">
+          Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.
+        </p>
+        <ul style="margin:24px auto 0; max-width:680px; color:#374151; font-size:18px; line-height:1.6; text-align:left;">
+          <li><span style="color:var(--rose-700); font-weight:700; margin-right:8px;">→</span><strong>Problem Solving:</strong> 1000+ LeetCode questions, ~600-day streak.</li>
+          <li><span style="color:var(--rose-700); font-weight:700; margin-right:8px;">→</span><strong>Technical Proficiency:</strong> DSA + full-stack web development.</li>
+          <li><span style="color:var(--rose-700); font-weight:700; margin-right:8px;">→</span><strong>Practical Experience:</strong> Impactful projects & internships.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="panel">
+      <div class="container">
+        <h2 class="center mb-16" style="font-size: clamp(32px,4.5vw,48px); font-weight:800;">Professional Experience</h2>
+        <div class="timeline" style="max-width:720px; margin:0 auto;">
+          <div class="timeline-item">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+                <div>
+                  <h3 class="mb-2" style="font-size:20px; margin:0;">Software Developer Intern</h3>
+                  <p class="mb-0" style="color:var(--rose-700); font-weight:600;">NTPC</p>
+                </div>
+                <span style="color:#6B7280; font-size:14px; font-weight:600;">Jun 2024 – Jul 2024</span>
+              </div>
+              <ul style="margin-top:14px; color:#4B5563; line-height:1.6;">
+                <li>Django Inventory Management with Chart.js visualizations.</li>
+                <li>Optimized MySQL interactions for efficiency.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+                <div>
+                  <h3 class="mb-2" style="font-size:20px; margin:0;">Industrial Intern</h3>
+                  <p class="mb-0" style="color:var(--rose-700); font-weight:600;">CSPDCL</p>
+                </div>
+                <span style="color:#6B7280; font-size:14px; font-weight:600;">Jun 2023 – Jul 2023</span>
+              </div>
+              <ul style="margin-top:14px; color:#4B5563; line-height:1.6;">
+                <li>File Tracking System to streamline approvals.</li>
+                <li>Django models, views, templates, URL routing.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="panel" style="background:#fff;">
+      <div class="container">
+        <h2 class="center mb-16" style="font-size: clamp(32px,4.5vw,48px); font-weight:800;">My Projects</h2>
+        <div class="card" style="overflow:hidden;">
+          <div class="grid" style="gap:0; grid-template-columns:1fr 1fr;">
+            <div style="padding:32px;">
+              <h3 style="font-size:24px; margin:0 0 8px;">Bhagavad Gita AI Analysis System</h3>
+              <p style="color:#4B5563; margin:12px 0 20px;">
+                LLM-powered textual analysis, extracting themes and insights.
+              </p>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span class="chip">Python</span>
+                <span class="chip">LangChain</span>
+                <span class="chip">Generative AI</span>
+              </div>
+              <div class="mt-8">
+                <a href="https://github.com/srishtisoni12" target="_blank" rel="noopener noreferrer" style="color:var(--rose-700); font-weight:700; text-decoration:none;">
+                  View on GitHub →
+                </a>
+              </div>
+            </div>
+            <div style="background:#FBE2E3; display:flex; align-items:center; justify-content:center; min-height:260px;">
+              <img src="https://placehold.co/600x400/FBE2E3/450A0A?text=Project+Preview" alt="Project preview" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="panel">
+      <div class="container center">
+        <h2 class="mb-4" style="font-size: clamp(32px,4.5vw,48px); font-weight:800;">Technical Skills</h2>
+        <p class="mb-12" style="color:#4B5563;">A scrolling showcase of the languages and tools I work with.</p>
+
+        <div class="skills-wrap" style="max-width:1100px; margin:0 auto;">
+          <ul class="skills-row" id="skillsRow">
+            <!-- Row duplicated by script for seamless loop -->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="panel">
+      <div class="container center">
+        <h2 style="font-size: clamp(32px,4.5vw,48px); font-weight:900;">Let's Build Something Amazing.</h2>
+        <p class="mt-4" style="font-size:18px; color:#4B5563; max-width:720px; margin:0 auto;">
+          I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!
+        </p>
+        <div class="mt-8" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <a class="btn btn-primary" href="https://www.linkedin.com/in/srishti-soni-93a5a4230/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn" style="background:#374151; color:#fff;" href="mailto:imsrishti1202@gmail.com">Email Me</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ===============================
+    // Watercolor Clouds + Magic Mist
+    // ===============================
+    (function () {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      function resize() {
+        const w = window.innerWidth, h = window.innerHeight;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', () => requestAnimationFrame(resize));
+
+      const particles = [];
+
+      // init clouds
+      for (let i = 0; i < 10; i++) {
+        particles.push({
+          type: 'cloud',
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight * 0.35,
+          vx: 0.15 + Math.random() * 0.25,
+          size: 50 + Math.random() * 60
+        });
+      }
+
+      function drawWatercolorCloud(x, y, base) {
+        const blobs = 6;
+        for (let i = 0; i < blobs; i++) {
+          const r = base * (0.45 + Math.random() * 0.85);
+          const ox = x + (Math.random() - 0.5) * base * 1.2;
+          const oy = y + (Math.random() - 0.5) * base * 0.8;
+          const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r);
+          g.addColorStop(0, "rgba(255,255,255,0.55)");
+          g.addColorStop(1, "rgba(173,216,230,0.25)"); // lightSkyBlue
+          ctx.save();
+          ctx.globalAlpha = 0.9;
+          ctx.filter = "blur(1.5px)";
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(ox, oy, r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function step() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        // subtle sky wash
+        ctx.fillStyle = "rgba(224,242,254,0.15)";
+        ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          if (p.type === 'cloud') {
+            p.x += p.vx;
+            if (p.x > window.innerWidth + 120) { p.x = -120; p.y = Math.random() * window.innerHeight * 0.35; }
+            drawWatercolorCloud(p.x, p.y, p.size);
+          } else if (p.type === 'mist') {
+            p.x += p.vx; p.y += p.vy;
+            p.vx *= 0.96; p.vy *= 0.96;
+            p.life += 1;
+            p.opacity = Math.max(0, 0.8 * (1 - p.life / p.maxLife));
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.shadowBlur = 14;
+            ctx.shadowColor = p.color;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            ctx.fill();
+            ctx.restore();
+            if (p.life >= p.maxLife) particles.splice(i,1);
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+
+      function mistBurst(x, y, count = 50) {
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            type: 'mist',
+            x, y,
+            vx: (Math.random() - 0.5) * 2.2,
+            vy: (Math.random() - 0.5) * 2.2,
+            life: 0,
+            maxLife: 40 + Math.random() * 30,
+            size: 6 + Math.random() * 12,
+            opacity: 0.8,
+            color: Math.random() < 0.5 ? "rgba(255,255,255,0.6)" : "rgba(244,63,94,0.35)"
+          });
+        }
+      }
+
+      const brand = document.getElementById('brandName');
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+      if (!prefersReduced && hasFinePointer) {
+        brand.addEventListener('mouseenter', (e) => mistBurst(e.clientX, e.clientY, 60));
+        brand.addEventListener('mousemove', (e) => mistBurst(e.clientX, e.clientY, 10));
+      }
+
+      // Build skills row (duplicated for seamless loop)
+      const SKILLS = ["C++","Python","HTML","CSS","JavaScript","React","Flask","MySQL","Git"];
+      const row = document.getElementById('skillsRow');
+      function renderChips(arr, ariaHidden=false) {
+        arr.forEach(s => {
+          const li = document.createElement('li');
+          li.className = 'chip';
+          if (ariaHidden) li.setAttribute('aria-hidden','true');
+          li.textContent = s;
+          row.appendChild(li);
+        });
+      }
+      renderChips(SKILLS, false);
+      renderChips(SKILLS, true);
+    })();
+  </script>
+</body>
+</html>
