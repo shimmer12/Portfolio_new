@@ -288,67 +288,88 @@
             100% { transform: translate3d(-400px,1280px,0) rotate(0deg); opacity: 0; }
         }
 
-        /* Sakura Petals CSS - Fixed with nested elements */
-        #sakura {
-            position: fixed;
+        /* Sakura Petals CSS - Improved teardrop shape behind content */
+        /* Background layer in About (behind the card/text) */
+        #sakura-about {
+            position: absolute;
             inset: 0;
-            pointer-events: none;
             overflow: hidden;
-            z-index: 40;
-            opacity: 0;
-            visibility: hidden;
+            z-index: 0;
         }
 
-        /* OUTER: only vertical fall + slight Z-rotate */
-        #sakura .petal {
+        /* OUTER: vertical fall only */
+        #sakura-about .petal {
             position: absolute;
             top: -8vh;
             left: calc(var(--x, 50) * 1%);
             animation: petal-fall var(--dur, 12s) linear infinite;
-            will-change: transform;
+            will-change: transform, opacity;
+            opacity: 0; /* fade in handled in keyframes */
         }
 
-        /* INNER SHAPE: color/shape + sway + spin */
-        #sakura .petal .shape {
+        /* INNER SHAPE: nicer teardrop + sway + spin */
+        #sakura-about .petal .shape {
             display: block;
-            width: 12px;
-            height: 18px;
-            background: radial-gradient(75% 85% at 50% 55%, #ffd1e3 0 60%, #f8a1c4 61% 100%);
-            border-radius: 60% 60% 80% 80% / 70% 70% 30% 30%;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,.15));
-            animation:
-                petal-sway var(--swayDur, 3.6s) ease-in-out infinite,
-                petal-spin var(--spinDur, 5s) ease-in-out infinite;
-            transform-origin: 50% 50%;
-        }
-
-        /* variety */
-        #sakura .petal:nth-child(3n) .shape {
-            width: 10px;
-            height: 16px;
-            background: radial-gradient(75% 85% at 50% 55%, #ffe0eb 0 60%, #f59abf 61% 100%);
-        }
-        #sakura .petal:nth-child(5n) .shape {
             width: 14px;
             height: 20px;
-            background: radial-gradient(75% 85% at 50% 55%, #ffcee2 0 60%, #f485b4 61% 100%);
+            background: radial-gradient(70% 90% at 45% 50%, #ffd8e7 0 55%, #f7a0c2 60% 100%);
+            border-radius: 60% 60% 80% 80% / 70% 70% 35% 35%;
+            transform: rotate(-12deg); /* teardrop tilt */
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,.12));
+            animation:
+                petal-sway var(--sway, 3.6s) ease-in-out infinite,
+                petal-spin var(--spin, 5s) ease-in-out infinite;
+            transform-origin: 50% 55%;
+            position: relative;
         }
 
-        /* keyframes */
+        /* tiny notch / fold hint */
+        #sakura-about .petal .shape::after {
+            content: '';
+            position: absolute;
+            right: 1px;
+            top: 45%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,255,255,0) 70%);
+            opacity: .7;
+        }
+
+        /* Size/variety */
+        #sakura-about .petal:nth-child(3n) .shape {
+            width: 12px;
+            height: 17px;
+            transform: rotate(-8deg);
+        }
+        #sakura-about .petal:nth-child(5n) .shape {
+            width: 16px;
+            height: 22px;
+            transform: rotate(-15deg);
+        }
+
+        /* Keyframes */
         @keyframes petal-fall {
             0%   { transform: translateY(-8vh) rotate(0deg); opacity: 0; }
             5%   { opacity: 1; }
             100% { transform: translateY(110vh) rotate(90deg); opacity: 0; }
         }
         @keyframes petal-sway {
-            0%   { transform: translateX(0); }
-            50%  { transform: translateX(18px); }
-            100% { transform: translateX(0); }
+            0%   { transform: translateX(0) rotate(var(--tilt, -12deg)); }
+            50%  { transform: translateX(16px) rotate(calc(var(--tilt, -12deg) + 6deg)); }
+            100% { transform: translateX(0) rotate(var(--tilt, -12deg)); }
         }
         @keyframes petal-spin {
-            0%   { transform: rotateX(0) rotateY(0) rotateZ(0); }
-            50%  { transform: rotateX(35deg) rotateY(35deg) rotateZ(0); }
-            100% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            0%   { transform: rotateX(0) rotateY(0); }
+            50%  { transform: rotateX(35deg) rotateY(35deg); }
+            100% { transform: rotateX(0) rotateY(0); }
+        }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            #sakura-about .petal .shape {
+                animation: petal-sway 5s ease-in-out infinite;
+            }
         }
     </style>
 </head>
@@ -356,7 +377,6 @@
     <div id="preloader"><span id="preloader-percent">0%</span></div>
     
     <canvas id="particle-canvas"></canvas>
-    <div id="sakura"></div>
 
     <!-- Simplified and improved SVG Snitch Cursor -->
     <div id="snitch-cursor">
@@ -430,8 +450,8 @@
                     
                     <p class="mt-6 text-lg text-gray-600 max-w-xl mx-auto md:mx-0 gsap-reveal">I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.</p>
                     <div class="mt-8 flex justify-center md:justify-start items-center space-x-4 gsap-reveal">
-                         <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover">Get in Touch</a>
-                         <a href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link sparkle-hover">Download Resume &rarr;</a>
+                         <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link">Get in Touch</a>
+                         <a href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link">Download Resume &rarr;</a>
                     </div>
                 </div>
                 <div class="flex justify-center items-center gsap-reveal">
@@ -457,8 +477,11 @@
         
         <!-- About Me Section -->
 <section id="about" class="panel relative overflow-hidden">
-  <!-- smaller white card -->
-  <div class="relative z-10 bg-white rounded-2xl shadow-lg max-w-3xl mx-auto p-10">
+  <!-- petals background ONLY for About -->
+  <div id="sakura-about" class="pointer-events-none absolute inset-0 z-0"></div>
+
+  <!-- your content/card sits ABOVE petals -->
+  <div class="about-card relative z-10 bg-white rounded-2xl shadow-lg max-w-3xl mx-auto p-10">
     <h2 class="text-5xl font-bold mb-6 gsap-reveal-chars section-heading">About Me</h2>
     <p class="text-xl text-gray-600 gsap-reveal">
       Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.
@@ -532,7 +555,7 @@
                                <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Generative AI</span>
                             </div>
                             <div class="mt-8">
-                               <a href="https://github.com/srishtisoni12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link sparkle-hover">View on GitHub <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                               <a href="https://github.com/srishtisoni12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link">View on GitHub <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
                            </div>
                         </div>
                         <div class="bg-rose-100 flex items-center justify-center">
@@ -548,7 +571,7 @@
             <div class="w-full max-w-6xl text-center">
                 <div class="gsap-reveal">
                     <h2 class="text-5xl font-bold text-center mb-4 gsap-reveal-chars section-heading">Technical Skills</h2>
-                    <p class="text-center text-gray-600 mb-12">A scrolling showcase of the languages and tools I work with.</p>
+                    <p class="text-center text-gray-600 mb-12">Technologies and Tools.</p>
                     <div class="scroller" data-animated="true">
                         <ul class="scroller__inner">
                             <li class="skill-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>C++</title><path fill="#00599C" d="M14.22.012h-4.44v23.976h4.44V.012zM23.988 9.774h-4.44v4.44h4.44V9.774zM19.548 9.774V5.334h4.44v4.44h-4.44zM19.548 18.666v-4.44h4.44v4.44h-4.44zM4.452 9.774H.012v4.44h4.44V9.774zM0 9.774v4.44H.012V9.774H0zM4.452 5.334V9.774H.012V5.334h4.44zM4.452 14.226v4.44H.012v-4.44h4.44z"/></svg><span>C++</span></li>
@@ -564,14 +587,14 @@
                     </div>
                 </div>
                 <div id="contact" class="mt-20 gsap-reveal">
-                    <h2 class="text-5xl font-extrabold text-gray-900 gsap-reveal-chars section-heading">Let's Build Something Amazing.</h2>
+                    <h2 class="text-5xl font-extrabold text-gray-900 section-heading">Let's Build Something Amazing.</h2>
                     <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!</p>
                     <div class="mt-8 flex justify-center items-center space-x-4">
-                        <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover inline-flex items-center space-x-2">
+                        <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                            <span>LinkedIn</span>
                         </a>
-                        <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover inline-flex items-center space-x-2">
+                        <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.107 10-8.107v11.817h-20z"/></svg>
                            <span>Email Me</span>
                         </a>
@@ -722,18 +745,7 @@
                 
                 animateParticles();
                 
-                // --- SAKURA & LEAVES TRIGGERS ---
-                const sakuraContainer = document.getElementById('sakura');
-                ScrollTrigger.create({
-                    trigger: '#about',
-                    start: 'top center',
-                    end: 'bottom center',
-                    onEnter: () => gsap.to(sakuraContainer, { autoAlpha: 1, duration: 1 }),
-                    onLeave: () => gsap.to(sakuraContainer, { autoAlpha: 0, duration: 1 }),
-                    onEnterBack: () => gsap.to(sakuraContainer, { autoAlpha: 1, duration: 1 }),
-                    onLeaveBack: () => gsap.to(sakuraContainer, { autoAlpha: 0, duration: 1 }),
-                });
-
+                // --- LEAVES TRIGGERS ---
                 const leavesContainer = document.getElementById('leaves');
                 ScrollTrigger.create({
                     trigger: '#experience',
@@ -744,6 +756,28 @@
                     onEnterBack: () => gsap.to(leavesContainer, { autoAlpha: 1, duration: 1 }),
                     onLeaveBack: () => gsap.to(leavesContainer, { autoAlpha: 0, duration: 1 }),
                 });
+
+                // Build petals behind About card
+                (function(){
+                    const wrap = document.getElementById('sakura-about');
+                    if(!wrap) return;
+                    const N = 70; // density
+                    for(let i=0;i<N;i++){
+                        const outer = document.createElement('span');
+                        outer.className = 'petal';
+                        outer.style.setProperty('--x', (Math.random()*100).toFixed(2));
+                        outer.style.setProperty('--dur', (10 + Math.random()*4).toFixed(2) + 's');
+
+                        const shape = document.createElement('span');
+                        shape.className = 'shape';
+                        shape.style.setProperty('--sway', (3 + Math.random()*2).toFixed(2) + 's');
+                        shape.style.setProperty('--spin', (4 + Math.random()*2).toFixed(2) + 's');
+                        shape.style.setProperty('--tilt', ( -16 + Math.random()*8 ) + 'deg');
+
+                        outer.appendChild(shape);
+                        wrap.appendChild(outer);
+                    }
+                })();
 
                 window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
                 
@@ -771,23 +805,7 @@
                     });
                 });
                 
-                // Create Sakura Petals dynamically with nested structure
-                const sakura = document.getElementById('sakura');
-                const petalCount = 80;
-                for (let i = 0; i < petalCount; i++) {
-                    const outer = document.createElement('span');
-                    outer.className = 'petal';
-                    outer.style.setProperty('--x', (Math.random() * 100).toFixed(2));
-                    outer.style.setProperty('--dur', (10 + Math.random() * 4).toFixed(2) + 's');
-                    outer.style.setProperty('--swayDur', (3 + Math.random() * 2).toFixed(2) + 's');
-                    outer.style.setProperty('--spinDur', (4 + Math.random() * 2).toFixed(2) + 's');
 
-                    const inner = document.createElement('span');
-                    inner.className = 'shape';
-
-                    outer.appendChild(inner);
-                    sakura.appendChild(outer);
-                }
 
                 // --- SKILL SCROLLER ---
                 const scrollers = document.querySelectorAll(".scroller");
