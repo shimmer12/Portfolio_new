@@ -7,11 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #FFF8F7; /* A very light pink background */
+            background-color: #FFF8F7; /* Main background color */
             cursor: none;
             opacity: 0;
             transition: opacity 0.5s;
@@ -30,7 +30,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1;
+            z-index: 1; /* Above leaves/sakura but below main content */
             pointer-events: none;
         }
         /* Preloader */
@@ -59,6 +59,14 @@
             height: 80px;
             pointer-events: none;
             z-index: 9999;
+        }
+        
+        /* Custom Font for Name */
+        #logo-name {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.25rem; /* Adjust size to fit */
+            font-weight: 700;
+            line-height: 1;
         }
 
 
@@ -114,16 +122,20 @@
         /* Vertical Scrolling Setup */
         main {
             width: 100%;
+            position: relative; 
+            z-index: 10;
         }
         .panel {
             width: 100vw;
-            min-height: 100vh; /* Use min-height to accommodate content */
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            padding: 8rem 2rem; /* More vertical padding */
+            padding: 8rem 2rem;
+            overflow: hidden;
         }
+        #about, #projects { background-color: white; }
 
         /* Specific panel styles */
         #home .grid { width: 100%; max-width: 1200px; }
@@ -131,10 +143,8 @@
             content: ''; position: absolute; left: -30px; top: 10px; width: 20px; height: 20px;
             border-radius: 50%; background-color: #FBE2E3; border: 4px solid #E11D48;
         }
-
-        /* Liquid Image Effect */
-        .liquid-image {
-            filter: url(#liquid-filter);
+        .section-heading {
+             cursor: pointer;
         }
 
         /* Skill Scroller */
@@ -173,12 +183,178 @@
              opacity: 0;
              transform: translateY(100%);
         }
+        
+        /* CSS Leaf Animations from CodePen */
+        #leaves {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            text-align: left;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            z-index: -1;
+        }
+
+        #leaves i {
+            display: inline-block;
+            position: absolute; /* Position them within the container */
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(to bottom right, #309900, #005600);
+            transform: skew(20deg);
+            border-radius: 5% 40% 70%;
+            box-shadow: inset 0px 0px 1px #222;
+            border: 1px solid #333;
+            z-index: 1;
+            animation: falling 5s 0s infinite;
+        }
+        #leaves i:nth-of-type(2n) { animation-name: falling2; }
+        #leaves i:nth-of-type(3n) { animation-name: falling3; }
+        #leaves i:before {
+            position: absolute;
+            content: '';
+            top: 117px;
+            right: 9px;
+            height: 27px;
+            width: 32px;
+            transform: rotate(49deg);
+            border-radius: 0% 15% 15% 0%;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            border-left: 0px solid #222;
+            border-right: 1px solid #222;
+            background: linear-gradient(to right, rgba(0,100,0,1), #005600);
+            z-index: 1;
+        }
+        #leaves i:after {
+            content: '';
+            height: 125px;
+            width: 10px;
+            background: linear-gradient(to right, rgba(0,0,0,.15), rgba(0,0,0,0));
+            display: block;
+            transform: rotate(125deg);
+            position: absolute;
+            left: 85px;
+            border-radius:50%;
+        }
+        #leaves i:nth-of-type(n)    { height:23px; width:30px; left: 10%;}
+        #leaves i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
+        #leaves i:nth-of-type(n):after { width:2px; height:17px; left: 12px; top:0px; }
+        #leaves i:nth-of-type(2n+1)    { height:11px; width:16px; left: 20%;}
+        #leaves i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0px; }
+        #leaves i:nth-of-type(2n+1):after { width:2px; height:6px; left: 5px; top:1px; }
+        #leaves i:nth-of-type(3n+2)  { height:17px; width:23px; left: 35%;}
+        #leaves i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
+        #leaves i:nth-of-type(3n+2):after  { height:10px; width:2px; top:1px; left:8px; }
+        #leaves i:nth-of-type(n)    { animation-delay: 1.9s;}
+        #leaves i:nth-of-type(2n)   { animation-delay: 3.9s; left: 40%;}
+        #leaves i:nth-of-type(3n)   { animation-delay: 2.3s; left: 60%;}
+        #leaves i:nth-of-type(4n)   { animation-delay: 4.4s; left: 70%;}
+        #leaves i:nth-of-type(5n)   { animation-delay: 5s;  left: 85%; }
+        #leaves i:nth-of-type(6n)   { animation-delay: 3.5s; left: 50%;}
+        #leaves i:nth-of-type(7n)   { animation-delay: 2.8s; left: 25%;}
+        #leaves i:nth-of-type(8n)   { animation-delay: 1.5s; left: 15%;}
+        #leaves i:nth-of-type(9n)   { animation-delay: 3.3s; left: 80%;}
+        #leaves i:nth-of-type(10n)  { animation-delay: 2.5s; left: 55%;}
+        #leaves i:nth-of-type(11n)  { animation-delay: 1.2s; left: 5%;}
+        #leaves i:nth-of-type(12n)  { animation-delay: 4.1s; left: 90%;}
+        #leaves i:nth-of-type(13n)  { animation-delay: 1s;  left: 45%; }
+        #leaves i:nth-of-type(14n)  { animation-delay: 4.7s; left: 65%;}
+        #leaves i:nth-of-type(15n)  { animation-delay: 3s;  left: 30%;}
+        #leaves i:nth-of-type(n)    { background: linear-gradient(to bottom right, #309900, #005600); }
+        #leaves i:nth-of-type(2n+2)  { background: linear-gradient(to bottom right, #5e9900, #2b5600); }
+        #leaves i:nth-of-type(4n+1)  { background: linear-gradient(to bottom right, #990, #564500); }
+        #leaves i:nth-of-type(n)    { opacity: .7;}
+        #leaves i:nth-of-type(3n+1)  { opacity: .5;}
+        #leaves i:nth-of-type(3n+2)  { opacity: .3;}
+        #leaves i:nth-of-type(n)    {transform: rotate(180deg);}
+        #leaves i:nth-of-type(n) { animation-timing-function:ease-in-out;}
+        @keyframes falling {
+            0% { transform: translate3d(0,0,0) rotate(0deg); }
+            100% { transform: translate3d(-350px,1200px,0) rotate(90deg); opacity: 0; }
+        }
+        @keyframes falling3 {
+            0% { transform: translate3d(0,0,0) rotate(-20deg); }
+            100% { transform: translate3d(-230px,1240px,0) rotate(-70deg); opacity: 0; }
+        }
+        @keyframes falling2 {
+            0% { transform: translate3d(0,0,0) rotate(90deg); }
+            100% { transform: translate3d(-400px,1280px,0) rotate(0deg); opacity: 0; }
+        }
+
+        /* Sakura Petals CSS */
+        #sakura {
+            position: fixed;
+            pointer-events: none;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #sakura .petal {
+            position: absolute;
+            top: -5vh;
+            left: calc(var(--x, 50) * 1%);
+            width: 12px;
+            height: 18px;
+            background: radial-gradient(75% 85% at 50% 55%, #ffd1e3 0 60%, #f8a1c4 61% 100%);
+            border-radius: 60% 60% 80% 80% / 70% 70% 30% 30%;
+            transform: rotate(0deg) translateZ(0);
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,.08));
+            animation:
+                fall var(--dur, 10s) linear infinite,
+                sway var(--swayDur, 3.5s) ease-in-out infinite,
+                spin var(--spinDur, 4.8s) ease-in-out infinite;
+            will-change: transform;
+        }
+        #sakura .petal:nth-child(3n) {
+            width: 10px; height: 16px; opacity: .85;
+            background: radial-gradient(75% 85% at 50% 55%, #ffe0eb 0 60%, #f59abf 61% 100%);
+            border-radius: 55% 65% 80% 80% / 70% 70% 30% 30%;
+        }
+        #sakura .petal:nth-child(5n) {
+            width: 14px; height: 20px; opacity: .95;
+            background: radial-gradient(75% 85% at 50% 55%, #ffcee2 0 60%, #f485b4 61% 100%);
+        }
+        #sakura .petal:nth-child(n)   { animation-delay: calc(-1s * (var(--i, 0) % 7)); }
+        #sakura .petal:nth-child(2n)  { animation-delay: calc(-1.6s * (var(--i, 0) % 5)); }
+        #sakura .petal:nth-child(3n)  { animation-delay: calc(-2.2s * (var(--i, 0) % 9)); }
+        #sakura .petal:nth-child(4n)  { animation-delay: calc(-.8s * (var(--i, 0) % 11)); }
+
+        #sakura .petal:nth-child(n)   { --dur: 11s; --swayDur: 3.8s; --spinDur: 5.2s; }
+        #sakura .petal:nth-child(2n)  { --dur: 12.5s; --swayDur: 4.2s; --spinDur: 4.6s; }
+        #sakura .petal:nth-child(3n)  { --dur: 10.5s; --swayDur: 3.2s; --spinDur: 6.1s; }
+        #sakura .petal:nth-child(4n)  { --dur: 13.5s; --swayDur: 4.8s; --spinDur: 5.6s; }
+
+        @keyframes fall {
+            0%   { transform: translate3d(0, -8vh, 0) rotate(0deg); opacity: 0; }
+            5%   { opacity: .95; }
+            100% { transform: translate3d(0, 110vh, 0) rotate(90deg); opacity: 0; }
+        }
+        @keyframes sway {
+            0%   { transform: translateX(0); }
+            50%  { transform: translateX(18px); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes spin {
+            0%   { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            25%  { transform: rotateX(35deg) rotateY(0)  rotateZ(15deg); }
+            50%  { transform: rotateX(35deg) rotateY(35deg) rotateZ(0); }
+            75%  { transform: rotateX(0)  rotateY(35deg) rotateZ(-10deg); }
+            100% { transform: rotateX(0)  rotateY(0)  rotateZ(0); }
+        }
     </style>
 </head>
 <body>
     <div id="preloader"><span id="preloader-percent">0%</span></div>
     
     <canvas id="particle-canvas"></canvas>
+    <div id="sakura"></div>
 
     <!-- Simplified and improved SVG Snitch Cursor -->
     <div id="snitch-cursor">
@@ -205,16 +381,6 @@
             <circle cx="50" cy="50" r="15" fill="url(#gold-gradient)" stroke="#3c2e2d" stroke-width="1"/>
         </svg>
     </div>
-    
-    <!-- SVG Filters for Liquid Effect -->
-    <svg style="display:none;">
-      <defs>
-        <filter id="liquid-filter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="1" result="turbulence"/>
-          <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="20" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-      </defs>
-    </svg>
 
     <div class="labubu-container hidden md:flex">
         <div id="labubu-bubble">
@@ -228,13 +394,13 @@
     <!-- Header & Navigation -->
     <header class="bg-white/70 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#home" class="text-2xl font-bold text-gray-900 magnetic-link">Srishti Soni</a>
+            <a href="#home" id="logo-name" class="text-gray-900 magnetic-link">Srishti Soni</a>
             <div class="hidden md:flex items-center space-x-2">
-                <a href="#about" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">About</a>
-                <a href="#experience" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">Experience</a>
-                <a href="#projects" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">Projects</a>
-                <a href="#skills" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link">Skills</a>
-                <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-px magnetic-link">Contact</a>
+                <a href="#about" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">About</a>
+                <a href="#experience" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">Experience</a>
+                <a href="#projects" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">Projects</a>
+                <a href="#skills" class="text-gray-600 hover:text-rose-600 transition duration-300 px-4 py-2 magnetic-link sparkle-hover">Skills</a>
+                <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-px magnetic-link sparkle-hover">Contact</a>
             </div>
              <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -257,8 +423,8 @@
                     <h1 class="text-6xl md:text-7xl font-extrabold text-gray-900 leading-tight gsap-reveal-chars">Software Developer & Creative Problem Solver</h1>
                     <p class="mt-6 text-lg text-gray-600 max-w-xl mx-auto md:mx-0 gsap-reveal">I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.</p>
                     <div class="mt-8 flex justify-center md:justify-start items-center space-x-4 gsap-reveal">
-                         <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link">Get in Touch</a>
-                         <a href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link">Download Resume &rarr;</a>
+                         <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover">Get in Touch</a>
+                         <a href="https://drive.google.com/file/d/1E9WmMYWwfa6dll0GD3YIpIbPFXYDSZ8Y/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link sparkle-hover">Download Resume &rarr;</a>
                     </div>
                 </div>
                 <div class="flex justify-center items-center gsap-reveal">
@@ -284,21 +450,38 @@
         
         <!-- About Me Section -->
         <section id="about" class="panel bg-white">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-5xl font-bold text-center mb-6 gsap-reveal-chars">About Me</h2>
-                <p class="text-xl text-gray-600 gsap-reveal">Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.</p>
-                 <ul class="mt-6 text-lg text-gray-700 space-y-3 text-left max-w-xl mx-auto">
-                    <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Problem Solving:</strong> Honed my skills by solving 1000+ questions on LeetCode, maintaining a 600-day streak.</li>
-                    <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Technical Proficiency:</strong> Strong foundation in Data Structures & Algorithms and full-stack web development.</li>
-                    <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Practical Experience:</strong> Applied my knowledge through impactful projects and professional internship experiences.</li>
-                </ul>
+            <div class="flex flex-col items-center gap-12 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-5xl font-bold mb-6 gsap-reveal-chars section-heading">About Me</h2>
+                    <p class="text-xl text-gray-600 gsap-reveal">Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.</p>
+                     <ul class="mt-6 text-lg text-gray-700 space-y-3 text-left max-w-xl mx-auto">
+                        <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Problem Solving:</strong> Honed my skills by solving 1000+ questions on LeetCode, maintaining a 600-day streak.</li>
+                        <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Technical Proficiency:</strong> Strong foundation in Data Structures & Algorithms and full-stack web development.</li>
+                        <li class="flex items-start gsap-reveal"><span class="text-rose-500 font-bold mr-3">&rarr;</span> <strong>Practical Experience:</strong> Applied my knowledge through impactful projects and professional internship experiences.</li>
+                    </ul>
+                    <div class="mt-8 flex justify-center space-x-6 gsap-reveal">
+                        <a href="https://github.com/shimmer12" target="_blank" class="text-gray-500 hover:text-rose-600 transition-transform duration-300 hover:scale-110">
+                           <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="text-gray-500 hover:text-rose-600 transition-transform duration-300 hover:scale-110">
+                           <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="https://leetcode.com/u/shimmer2002/" target="_blank" class="text-gray-500 hover:text-rose-600 transition-transform duration-300 hover:scale-110">
+                            <svg class="w-8 h-8" fill="currentColor" role="img" viewBox="0 0 24 24"><title>LeetCode</title><path d="M13.48 4.26a1.4 1.4 0 0 0-1.4-.26l-6 2A1.4 1.4 0 0 0 5 7.4v9.2a1.4 1.4 0 0 0 .8.86l6 2a1.4 1.4 0 0 0 1.4-.26l6-2A1.4 1.4 0 0 0 20.2 16.6V7.4a1.4 1.4 0 0 0-.8-.86l-6-2ZM13 18.38l-4-1.33V9.42l4 1.33v7.63Zm5-2.71l-4 1.33V10.75l4-1.33v6.55Z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center gsap-reveal">
+                    <img src="image_478ee1.png" alt="Srishti Soni" class="rounded-full shadow-2xl w-80 h-80 object-cover">
+                </div>
             </div>
         </section>
 
         <!-- Experience Section -->
         <section id="experience" class="panel">
+             <div id="leaves"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
             <div class="w-full max-w-4xl">
-                <h2 class="text-5xl font-bold text-center mb-16 gsap-reveal-chars">Professional Experience</h2>
+                <h2 class="text-5xl font-bold text-center mb-16 gsap-reveal-chars section-heading">Professional Experience</h2>
                 <div class="max-w-3xl mx-auto relative">
                     <div class="border-l-2 border-rose-200 absolute h-full top-0 left-[-20px]"></div>
                     <div class="mb-12 relative timeline-item pl-8 gsap-reveal">
@@ -332,7 +515,7 @@
         <!-- Projects Section -->
         <section id="projects" class="panel bg-white">
              <div class="w-full max-w-5xl">
-                <h2 class="text-5xl font-bold text-center mb-16 gsap-reveal-chars">My Projects</h2>
+                <h2 class="text-5xl font-bold text-center mb-16 gsap-reveal-chars section-heading">My Projects</h2>
                 <div class="bg-rose-50 rounded-lg shadow-lg overflow-hidden group gsap-reveal">
                     <div class="grid md:grid-cols-2">
                         <div class="p-8">
@@ -344,7 +527,7 @@
                                <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Generative AI</span>
                             </div>
                             <div class="mt-8">
-                               <a href="https://github.com/srishtisoni12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link">View on GitHub <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                               <a href="https://github.com/srishtisoni12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link sparkle-hover">View on GitHub <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
                            </div>
                         </div>
                         <div class="bg-rose-100 flex items-center justify-center">
@@ -359,7 +542,7 @@
         <section id="skills" class="panel">
             <div class="w-full max-w-6xl text-center">
                 <div class="gsap-reveal">
-                    <h2 class="text-5xl font-bold text-center mb-4 gsap-reveal-chars">Technical Skills</h2>
+                    <h2 class="text-5xl font-bold text-center mb-4 gsap-reveal-chars section-heading">Technical Skills</h2>
                     <p class="text-center text-gray-600 mb-12">A scrolling showcase of the languages and tools I work with.</p>
                     <div class="scroller" data-animated="true">
                         <ul class="scroller__inner">
@@ -376,14 +559,14 @@
                     </div>
                 </div>
                 <div id="contact" class="mt-20 gsap-reveal">
-                    <h2 class="text-5xl font-extrabold text-gray-900 gsap-reveal-chars">Let's Build Something Amazing.</h2>
+                    <h2 class="text-5xl font-extrabold text-gray-900 gsap-reveal-chars section-heading">Let's Build Something Amazing.</h2>
                     <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!</p>
                     <div class="mt-8 flex justify-center items-center space-x-4">
-                        <a href="https://www.linkedin.com/in/srishti-soni-93a5a4230/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
+                        <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover inline-flex items-center space-x-2">
                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                            <span>LinkedIn</span>
                         </a>
-                        <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
+                        <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link sparkle-hover inline-flex items-center space-x-2">
                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.107 10-8.107v11.817h-20z"/></svg>
                            <span>Email Me</span>
                         </a>
@@ -464,139 +647,103 @@
                     },
                 });
 
-                // --- ENHANCED PARTICLE ENGINE ---
+                // --- PARTICLE ENGINE ---
                 const canvas = document.getElementById('particle-canvas');
                 const ctx = canvas.getContext('2d');
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
                 let particles = [];
-                let activeEffects = { sakura: false, leaves: false, clouds: false };
+                let activeEffects = { mist: false };
                 const particleConfig = {
-                    sakura: { count: 40, colors: ['#FFC0CB', '#FFB6C1', '#FF69B4'] }, // Increased count
-                    leaves: { count: 20, colors: ['#228B22', '#90EE90', '#4F7942', '#D2691E'] },
-                    clouds: { count: 15, colors: ['rgba(255, 255, 255, 0.8)'] },
-                    dew: { count: 30, colors: ['rgba(255, 255, 255, 0.7)'] }
+                    mist: { count: 50, colors: ['rgba(147, 112, 219, 0.6)', 'rgba(192, 192, 192, 0.8)'] }
                 };
-
-                class Particle {
-                    constructor(type, colors) {
+                
+                 class Particle {
+                    constructor(type, colors, startX, startY) {
                         this.type = type;
                         this.color = colors[Math.floor(Math.random() * colors.length)];
                         this.opacity = 1;
                         this.life = 0;
-                        this.maxLife = 100;
-                        
-                        if (type === 'sakura') {
-                            this.x = Math.random() * canvas.width;
-                            this.y = Math.random() * canvas.height;
-                            this.size = Math.random() * 2 + 1; // smaller petals
-                            this.speedX = Math.random() * 1 - 0.5;
-                            this.speedY = Math.random() * 0.5 + 0.2;
-                            this.spin = Math.random() * 4 - 2;
-                            this.sway = Math.random() * 4 - 2;
-                        } else if (type === 'clouds') {
-                            this.x = -100;
-                            this.y = Math.random() * (canvas.height * 0.4);
-                            this.size = Math.random() * 25 + 20;
-                            this.speedY = 0;
-                            this.speedX = Math.random() * 0.5 + 0.2;
-                        } else if (type === 'dew') {
-                            this.x = Math.random() * canvas.width;
-                            this.y = Math.random() * canvas.height;
-                            this.size = Math.random() * 5 + 2;
-                            this.speedY = 0;
-                            this.speedX = 0;
-                            this.opacity = 0;
-                        } else { // leaves
-                            this.x = Math.random() * canvas.width;
-                            this.y = -20;
-                            this.size = Math.random() * 5 + 3;
-                            this.speedY = Math.random() * 1 + 0.5;
-                            this.speedX = Math.random() * 2 - 1;
-                            this.rotation = Math.random() * Math.PI * 2;
-                            this.rotationSpeed = (Math.random() - 0.5) * 0.05;
-                        }
+                        this.x = startX;
+                        this.y = startY;
+                        this.size = Math.random() * 3 + 1;
+                        this.speedX = (Math.random() - 0.5) * 4;
+                        this.speedY = (Math.random() - 0.5) * 4;
+                        this.maxLife = 60 + Math.random() * 40;
                     }
                     update() {
-                         if (this.type === 'sakura') {
-                            this.x += this.speedX + Math.sin(this.y / 20) * this.sway;
-                            this.y += this.speedY;
-                            this.size += 0.01;
-                            if (this.y > canvas.height) {
-                               this.reset('sakura');
-                            }
-                        } else {
-                            this.rotation += this.rotationSpeed;
-                            if (this.type === 'dew') {
-                                this.life++;
-                                this.opacity = Math.sin(Math.PI * (this.life / this.maxLife));
-                                if (this.life >= this.maxLife) this.reset('dew');
-                            } else if (this.type === 'clouds') {
-                                this.x += this.speedX;
-                                if (this.x > canvas.width + 100) this.reset(this.type);
-                            } else {
-                                this.y += this.speedY;
-                                this.x += this.speedX;
-                                if (this.y > canvas.height + 20) this.reset(this.type);
-                                if (this.x > canvas.width + 20 || this.x < -20) this.speedX *= -1;
-                            }
-                        }
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        this.life++;
+                        this.opacity = 1 - (this.life / this.maxLife);
                     }
                     draw() {
+                        if (this.opacity <= 0) return;
                         ctx.save();
                         ctx.globalAlpha = this.opacity;
                         ctx.fillStyle = this.color;
                         ctx.translate(this.x, this.y);
-                        
-                        if (this.type !== 'sakura') {
-                             ctx.rotate(this.rotation);
-                        }
-                        
                         ctx.beginPath();
-                        if (this.type === 'clouds') {
-                             const s = this.size;
-                             ctx.moveTo(0,0);
-                             ctx.arc(0, 0, s, 0, Math.PI * 2);
-                             ctx.arc(s * 0.8, -s * 0.5, s * 0.8, 0, Math.PI * 2);
-                             ctx.arc(-s, -s * 0.2, s * 0.9, 0, Math.PI * 2);
-                             ctx.arc(s, s * 0.3, s * 0.7, 0, Math.PI * 2);
-                        } else if (this.type === 'dew') {
-                            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-                        } else if (this.type === 'sakura') {
-                             ctx.arc(0, 0, this.size, 0, Math.PI);
-                             ctx.arc(0, this.size, this.size, Math.PI, Math.PI * 2);
-                        } else if (this.type === 'leaves') {
-                            const s = this.size;
-                            ctx.moveTo(0, -s*1.5);
-                            ctx.quadraticCurveTo(s, 0, 0, s*1.5);
-                            ctx.quadraticCurveTo(-s, 0, 0, -s*1.5);
-                        }
+                        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
                         ctx.fill();
                         ctx.closePath();
                         ctx.restore();
                     }
-                    reset(type) { Object.assign(this, new Particle(type, particleConfig[type].colors)); }
                 }
-                function createParticles(type) {
+                function createParticles(type, startX, startY) {
                     const config = particleConfig[type];
                     if (!config || !config.colors) return;
                     const count = config.count;
-                    for (let i = 0; i < count; i++) { particles.push(new Particle(type, config.colors)); }
+                    for (let i = 0; i < count; i++) { particles.push(new Particle(type, config.colors, startX, startY)); }
                 }
                 function animateParticles() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    particles = particles.filter(p => {
-                        if (p.type !== 'dew' && !activeEffects[p.type]) return false;
-                        p.update(); p.draw(); return true;
+                    particles.forEach((p, index) => {
+                        p.update();
+                        p.draw();
+                        if (p.life >= p.maxLife) {
+                            particles.splice(index, 1);
+                        }
                     });
                     requestAnimationFrame(animateParticles);
                 }
-                createParticles('dew');
+                
                 animateParticles();
-                ScrollTrigger.create({ trigger: '#about', start: 'top center', end: 'bottom center', onEnter: () => { activeEffects.sakura = true; createParticles('sakura'); }, onLeave: () => activeEffects.sakura = false, onEnterBack: () => { activeEffects.sakura = true; createParticles('sakura'); }, onLeaveBack: () => activeEffects.sakura = false });
-                ScrollTrigger.create({ trigger: '#experience', start: 'top center', end: 'bottom center', onEnter: () => { activeEffects.leaves = true; createParticles('leaves'); }, onLeave: () => activeEffects.leaves = false, onEnterBack: () => { activeEffects.leaves = true; createParticles('leaves'); }, onLeaveBack: () => activeEffects.leaves = false });
-                ScrollTrigger.create({ trigger: '#projects', start: 'top center', end: 'bottom center', onEnter: () => { activeEffects.clouds = true; createParticles('clouds'); }, onLeave: () => activeEffects.clouds = false, onEnterBack: () => { activeEffects.clouds = true; createParticles('clouds'); }, onLeaveBack: () => activeEffects.clouds = false });
+                
+                // --- SAKURA & LEAVES TRIGGERS ---
+                const sakuraContainer = document.getElementById('sakura');
+                ScrollTrigger.create({
+                    trigger: '#about',
+                    start: 'top center',
+                    end: 'bottom center',
+                    onEnter: () => gsap.to(sakuraContainer, { autoAlpha: 1, duration: 1 }),
+                    onLeave: () => gsap.to(sakuraContainer, { autoAlpha: 0, duration: 1 }),
+                    onEnterBack: () => gsap.to(sakuraContainer, { autoAlpha: 1, duration: 1 }),
+                    onLeaveBack: () => gsap.to(sakuraContainer, { autoAlpha: 0, duration: 1 }),
+                });
+
+                const leavesContainer = document.getElementById('leaves');
+                ScrollTrigger.create({
+                    trigger: '#experience',
+                    start: 'top center',
+                    end: 'bottom center',
+                    onEnter: () => gsap.to(leavesContainer, { autoAlpha: 1, duration: 1 }),
+                    onLeave: () => gsap.to(leavesContainer, { autoAlpha: 0, duration: 1 }),
+                    onEnterBack: () => gsap.to(leavesContainer, { autoAlpha: 1, duration: 1 }),
+                    onLeaveBack: () => gsap.to(leavesContainer, { autoAlpha: 0, duration: 1 }),
+                });
+
                 window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+                
+                // --- MIST EFFECT ON HEADING CLICK ---
+                document.querySelectorAll('.section-heading').forEach(heading => {
+                    heading.addEventListener('click', (e) => {
+                         const rect = heading.getBoundingClientRect();
+                         const startX = rect.left + (rect.width / 2);
+                         const startY = rect.top + (rect.height / 2);
+                         createParticles('mist', startX, startY);
+                    });
+                });
 
                 // --- NAVIGATION ---
                 document.querySelectorAll('header a[href^="#"]').forEach(anchor => {
@@ -611,6 +758,17 @@
                         }
                     });
                 });
+                
+                // Create Sakura Petals dynamically
+                const sakura = document.getElementById('sakura');
+                const petalCount = 80;
+                for (let i = 0; i < petalCount; i++) {
+                    const petal = document.createElement('span');
+                    petal.className = 'petal';
+                    petal.style.setProperty('--x', Math.random() * 100);
+                    petal.style.setProperty('--i', i);
+                    sakura.appendChild(petal);
+                }
 
                 // --- SKILL SCROLLER ---
                 const scrollers = document.querySelectorAll(".scroller");
@@ -618,7 +776,7 @@
                     scrollers.forEach((scroller) => {
                         const scrollerInner = scroller.querySelector(".scroller__inner");
                         if(scroller.dataset.animated) return;
-                        
+                        scroller.dataset.animated = true;
                         const scrollerContent = Array.from(scrollerInner.children);
                         scrollerContent.forEach(item => {
                             const duplicatedItem = item.cloneNode(true);
@@ -628,28 +786,6 @@
                     });
                 }
                 
-                // --- LIQUID IMAGE EFFECT ---
-                const liquidImage = document.querySelector('.liquid-image');
-                if(liquidImage) {
-                    const turbulence = document.querySelector('#liquid-filter feTurbulence');
-                    let turbulenceAnim;
-                    liquidImage.addEventListener('mouseenter', () => {
-                        turbulenceAnim = gsap.to(turbulence.baseFrequency, { 
-                            value: '0.03 0.05', 
-                            duration: 1, 
-                            ease: 'power2.inOut' 
-                        });
-                    });
-                     liquidImage.addEventListener('mouseleave', () => {
-                        if(turbulenceAnim) turbulenceAnim.kill();
-                         gsap.to(turbulence.baseFrequency, { 
-                            value: '0.01 0.03', 
-                            duration: 0.5, 
-                            ease: 'power2.out' 
-                        });
-                    });
-                }
-
                 // --- SVG GOLDEN SNITCH CURSOR ---
                 const snitchCursor = document.getElementById('snitch-cursor');
                 const snitchSvg = document.getElementById('snitch-svg');
@@ -703,6 +839,36 @@
                 document.getElementById('mobile-menu-button').addEventListener('click', () => {
                     document.getElementById('mobile-menu').classList.toggle('hidden');
                 });
+                
+                // --- SPARKLE EFFECT ---
+                const sparkleElements = document.querySelectorAll('.sparkle-hover');
+                sparkleElements.forEach(el => {
+                    el.addEventListener('mousemove', e => {
+                        const rect = el.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+
+                        const sparkle = document.createElement('span');
+                        sparkle.style.position = 'absolute';
+                        sparkle.style.left = `${x}px`;
+                        sparkle.style.top = `${y}px`;
+                        sparkle.style.width = '2px';
+                        sparkle.style.height = '2px';
+                        sparkle.style.backgroundColor = 'silver';
+                        sparkle.style.borderRadius = '50%';
+                        sparkle.style.pointerEvents = 'none';
+                        el.appendChild(sparkle);
+
+                        gsap.to(sparkle, {
+                            scale: gsap.utils.random(4, 8),
+                            opacity: 0,
+                            duration: 0.6,
+                            ease: 'power2.out',
+                            onComplete: () => sparkle.remove()
+                        });
+                    });
+                });
+
 
                 // --- LABUBU BUBBLE ---
                 const labubuBubble = document.getElementById('labubu-bubble');
@@ -715,7 +881,6 @@
                     "Just git push and pray.",
                     "Computers are fast; programmers keep them slow.",
                     "I'm not lazy, I'm on energy-saving mode.",
-                    "Hi!"
                 ];
                 
                 function changeJoke() {
@@ -741,11 +906,12 @@
                 labubuText.textContent = "Hi!";
                 if(jokeInterval) clearInterval(jokeInterval);
                 setTimeout(() => {
-                    jokeInterval = setInterval(changeJoke, 4000); // slightly faster with a pause
+                    jokeInterval = setInterval(changeJoke, 6000); 
                     changeJoke();
-                }, 3000); // Delay the first joke a bit longer
+                }, 3000); 
             }
         });
     </script>
 </body>
 </html>
+
