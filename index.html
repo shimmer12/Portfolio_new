@@ -1,1710 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Srishti Soni - Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #FFF8F7; /* Main background color */
-            cursor: none;
-            opacity: 0;
-            transition: opacity 0.5s;
-            overflow-x: hidden;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Montserrat', sans-serif;
-        }
-        body.loaded {
-            opacity: 1;
-        }
-        /* Particle Canvas */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1; /* Above leaves/sakura but below main content */
-            pointer-events: none;
-        }
-        /* Preloader */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #BE123C;
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: 600;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Srishti Soni - Portfolio</title>
 
-        /* SVG Snitch Cursor */
-        #snitch-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 80px;
-            height: 80px;
-            pointer-events: none;
-            z-index: 40;
-            opacity: 1;
-            display: block;
-            filter: 
-                drop-shadow(0 0 6px rgba(255, 215, 0, 0.5))
-                drop-shadow(0 0 12px rgba(255, 215, 0, 0.3));
-            animation: subtleShine 4s ease-in-out infinite;
-        }
+  <!-- Tailwind & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
 
-        /* Ensure SVG is visible */
-        #snitch-svg {
-            width: 100%;
-            height: 100%;
-            display: block !important;
-            opacity: 1 !important;
-        }
-
-        /* Subtle Golden Snitch Shine Animation */
-        @keyframes subtleShine {
-            0%, 100% { 
-                filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4));
-            }
-            50% { 
-                filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
-            }
-        }
-
-        /* Gentle hover effect */
-        .magnetic-link:hover ~ #snitch-cursor,
-        a:hover ~ #snitch-cursor {
-            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5));
-        }
-        
-        /* Custom Font for Name */
-        #logo-name {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 2.25rem; /* Adjust size to fit */
-            font-weight: 700;
-            line-height: 1;
-        }
-
-
-        /* Floating Labubu Character */
-        .labubu-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            align-items: flex-end;
-            gap: 1rem;
-        }
-        .labubu-character {
-            width: 6rem; /* 96px */
-            height: 6rem; /* 96px */
-            animation: bobbing 3s ease-in-out infinite;
-        }
-        #labubu-bubble {
-            background: white;
-            padding: 1rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 250px;
-            position: relative;
-            margin-bottom: 2rem;
-            opacity: 0;
-            transform-origin: bottom right;
-            transform: scale(0.5);
-            visibility: hidden;
-        }
-        #labubu-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 15px solid white;
-        }
-        #labubu-text {
-            font-size: 0.9rem;
-            color: #374151;
-            text-align: center;
-        }
-        @keyframes bobbing {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* Vertical Scrolling Setup */
-        main {
-            width: 100%;
-            position: relative; 
-            z-index: 10;
-        }
-        .panel {
-            width: 100vw;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            padding: 8rem 2rem;
-            overflow: hidden;
-        }
-        #about, #projects { background-color: transparent !important;}
-
-        /* Specific panel styles */
-        #home .grid { width: 100%; max-width: 1200px; }
-        .timeline-item::before {
-            content: ''; position: absolute; left: -30px; top: 10px; width: 20px; height: 20px;
-            border-radius: 50%; background-color: #FBE2E3; border: 4px solid #E11D48;
-        }
-        .section-heading {
-             cursor: pointer;
-        }
-
-        /* Skill Scroller */
-        .scroller {
-            max-width: 1100px; margin: auto; overflow: hidden;
-            -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
-            mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
-        }
-        .scroller__inner {
-            display: flex; list-style: none; padding: 0; margin: 0; gap: 2rem; width: max-content;
-        }
-        
-        .scroller[data-animated="true"] .scroller__inner {
-             animation: scroll 20s linear infinite; /* Increased speed */
-        }
-
-        @keyframes scroll { 
-            to { 
-                transform: translate(calc(-50% - 1rem)); 
-            } 
-        }
-
-        .skill-item {
-            display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.75rem 1.25rem; background: white; border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05); white-space: nowrap;
-            transition: transform 0.2s;
-            position: relative; 
-            overflow: visible;
-        }
-        .skill-item:hover {
-            transform: translateY(-5px);
-        }
-    .skill-item svg, .skill-item img { width: 28px; height: 28px; object-fit: contain; display: block; filter: none; }
-        .skill-item span { font-weight: 500; font-size: 1rem; color: #374151; }
-
-        /* === Orbit Sparks for Skills === */
-        .skill-spark {
-          position: absolute;
-          left: 50%; top: 50%;
-          width: 6px; height: 6px;
-          border-radius: 50%;
-          pointer-events: none;
-          opacity: 0.8;              /* visible initially */
-          transform: translate(-50%, -50%);
-          mix-blend-mode: screen;     /* pretty glow on light/dark */
-          filter: blur(.2px);
-          background: radial-gradient(circle at 40% 40%, #00ffff 0 30%, rgba(0,255,255,.0) 70%);
-          box-shadow:
-            0 0 8px rgba(0, 255, 255, .9),
-            0 0 18px rgba(0, 191, 255, .7);
-          animation:
-            orbit var(--dur, 8s) linear infinite,
-            flicker 2.2s ease-in-out infinite;
-          will-change: transform, opacity, filter;
-          z-index: 2;
-        }
-
-        /* orbit path: rotate -> translate(radius) -> counter-rotate to face out */
-        @keyframes orbit {
-          from { transform: rotate(var(--a, 0deg)) translateX(var(--r, 18px)) rotate(calc(-1 * var(--a, 0deg))); }
-          to   { transform: rotate(calc(var(--a, 0deg) + 360deg)) translateX(var(--r, 18px)) rotate(calc(-1 * (var(--a, 0deg) + 360deg))); }
-        }
-
-        /* gentle brightness shimmer */
-        @keyframes flicker {
-          0%,100% { filter: brightness(1) blur(.2px); opacity: .65; }
-          50%     { filter: brightness(1.25) blur(.1px); opacity: 1; }
-        }
-
-        /* removed fadeIn animation for immediate visibility */
-
-        /* hover: make sparks a tad bigger/faster */
-        .skill-item:hover .skill-spark {
-          box-shadow:
-            0 0 12px rgba(0, 255, 255, 1),
-            0 0 25px rgba(0, 191, 255, .8);
-          filter: brightness(1.4);
-        }
-
-        /* smaller screens: fewer/smaller orbits (JS also limits count) */
-        @media (max-width: 640px) {
-          .skill-spark { width: 5px; height: 5px; }
-        }
-
-        /* accessibility */
-        @media (prefers-reduced-motion: reduce) {
-          .skill-spark { 
-            animation: none;
-            opacity: 0.6;
-          }
-        }
-
-        /* === Background Sparkles for Skills Section === */
-        #skills-sparkles {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        .bg-sparkle {
-          position: absolute;
-          width: 3px;
-          height: 3px;
-          background: radial-gradient(circle, #00ffff 0%, rgba(0,255,255,0) 70%);
-          border-radius: 50%;
-          opacity: 0;
-          animation: 
-            sparkleFloat var(--duration, 8s) linear infinite,
-            sparkleGlow var(--glow-duration, 3s) ease-in-out infinite;
-          box-shadow: 
-            0 0 6px rgba(0, 255, 255, 0.6),
-            0 0 12px rgba(0, 191, 255, 0.4);
-        }
-
-        @keyframes sparkleFloat {
-          0% {
-            transform: translateY(100vh) translateX(var(--start-x, 0px)) scale(0);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-            transform: translateY(90vh) translateX(var(--start-x, 0px)) scale(1);
-          }
-          90% {
-            opacity: 1;
-            transform: translateY(-10vh) translateX(var(--end-x, 0px)) scale(1);
-          }
-          100% {
-            transform: translateY(-20vh) translateX(var(--end-x, 0px)) scale(0);
-            opacity: 0;
-          }
-        }
-
-        @keyframes sparkleGlow {
-          0%, 100% { 
-            filter: brightness(1);
-            transform: scale(1);
-          }
-          50% { 
-            filter: brightness(1.5);
-            transform: scale(1.2);
-          }
-        }
-
-        /* Responsive sparkles */
-        @media (max-width: 768px) {
-          .bg-sparkle {
-            width: 2px;
-            height: 2px;
-          }
-        }
-
-        /* GSAP animation prep for SplitType */
-        .gsap-reveal-chars {
-             opacity: 1;
-        }
-        .gsap-reveal-chars.split-initialized .char {
-             opacity: 0;
-             transform: translateY(100%);
-        }
-        
-        /* Ensure visibility for gsap-reveal elements */
-        .gsap-reveal {
-            opacity: 1;
-        }
-        
-        /* Remove transitions from GSAP animated elements */
-        .gsap-reveal, .gsap-reveal-chars, .magnetic-link {
-            transition: none !important;
-        }
-        
-        /* Only apply transitions to non-GSAP elements */
-        .hover-transition {
-            transition: color 0.3s ease, background-color 0.3s ease;
-        }
-        
-        /* Ensure main content stays above cursor */
-        .panel {
-            position: relative;
-            z-index: 100;
-        }
-        
-        /* Ensure navigation stays above everything */
-        header {
-            z-index: 1000;
-        }
-        
-        /* Better positioning for sparkle effects */
-        .sparkle-hover {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* CSS Leaf Animations from CodePen */
-        #leaves {
-            position: absolute;
-            top: -50px;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            text-align: left;
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            z-index: -1;
-        }
-
-        #leaves i {
-            display: inline-block;
-            position: absolute; /* Position them within the container */
-            width: 200px;
-            height: 150px;
-            background: linear-gradient(to bottom right, #309900, #005600);
-            transform: skew(20deg);
-            border-radius: 5% 40% 70%;
-            box-shadow: inset 0px 0px 1px #222;
-            border: 1px solid #333;
-            z-index: 1;
-            animation: falling 5s 0s infinite;
-        }
-        #leaves i:nth-of-type(2n) { animation-name: falling2; }
-        #leaves i:nth-of-type(3n) { animation-name: falling3; }
-        #leaves i:before {
-            position: absolute;
-            content: '';
-            top: 117px;
-            right: 9px;
-            height: 27px;
-            width: 32px;
-            transform: rotate(49deg);
-            border-radius: 0% 15% 15% 0%;
-            border-top: 1px solid #222;
-            border-bottom: 1px solid #222;
-            border-left: 0px solid #222;
-            border-right: 1px solid #222;
-            background: linear-gradient(to right, rgba(0,100,0,1), #005600);
-            z-index: 1;
-        }
-        #leaves i:after {
-            content: '';
-            height: 125px;
-            width: 10px;
-            background: linear-gradient(to right, rgba(0,0,0,.15), rgba(0,0,0,0));
-            display: block;
-            transform: rotate(125deg);
-            position: absolute;
-            left: 85px;
-            border-radius:50%;
-        }
-        #leaves i:nth-of-type(n)    { height:23px; width:30px; left: 10%;}
-        #leaves i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
-        #leaves i:nth-of-type(n):after { width:2px; height:17px; left: 12px; top:0px; }
-        #leaves i:nth-of-type(2n+1)    { height:11px; width:16px; left: 20%;}
-        #leaves i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0px; }
-        #leaves i:nth-of-type(2n+1):after { width:2px; height:6px; left: 5px; top:1px; }
-        #leaves i:nth-of-type(3n+2)  { height:17px; width:23px; left: 35%;}
-        #leaves i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
-        #leaves i:nth-of-type(3n+2):after  { height:10px; width:2px; top:1px; left:8px; }
-        #leaves i:nth-of-type(n)    { animation-delay: 1.9s;}
-        #leaves i:nth-of-type(2n)   { animation-delay: 3.9s; left: 40%;}
-        #leaves i:nth-of-type(3n)   { animation-delay: 2.3s; left: 60%;}
-        #leaves i:nth-of-type(4n)   { animation-delay: 4.4s; left: 70%;}
-        #leaves i:nth-of-type(5n)   { animation-delay: 5s;  left: 85%; }
-        #leaves i:nth-of-type(6n)   { animation-delay: 3.5s; left: 50%;}
-        #leaves i:nth-of-type(7n)   { animation-delay: 2.8s; left: 25%;}
-        #leaves i:nth-of-type(8n)   { animation-delay: 1.5s; left: 15%;}
-        #leaves i:nth-of-type(9n)   { animation-delay: 3.3s; left: 80%;}
-        #leaves i:nth-of-type(10n)  { animation-delay: 2.5s; left: 55%;}
-        #leaves i:nth-of-type(11n)  { animation-delay: 1.2s; left: 5%;}
-        #leaves i:nth-of-type(12n)  { animation-delay: 4.1s; left: 90%;}
-        #leaves i:nth-of-type(13n)  { animation-delay: 1s;  left: 45%; }
-        #leaves i:nth-of-type(14n)  { animation-delay: 4.7s; left: 65%;}
-        #leaves i:nth-of-type(15n)  { animation-delay: 3s;  left: 30%;}
-        #leaves i:nth-of-type(n)    { background: linear-gradient(to bottom right, #309900, #005600); }
-        #leaves i:nth-of-type(2n+2)  { background: linear-gradient(to bottom right, #5e9900, #2b5600); }
-        #leaves i:nth-of-type(4n+1)  { background: linear-gradient(to bottom right, #990, #564500); }
-        #leaves i:nth-of-type(n)    { opacity: .7;}
-        #leaves i:nth-of-type(3n+1)  { opacity: .5;}
-        #leaves i:nth-of-type(3n+2)  { opacity: .3;}
-        #leaves i:nth-of-type(n)    {transform: rotate(180deg);}
-        #leaves i:nth-of-type(n) { animation-timing-function:ease-in-out;}
-        @keyframes falling {
-            0% { transform: translate3d(0,0,0) rotate(0deg); }
-            100% { transform: translate3d(-350px,1200px,0) rotate(90deg); opacity: 0; }
-        }
-        @keyframes falling3 {
-            0% { transform: translate3d(0,0,0) rotate(-20deg); }
-            100% { transform: translate3d(-230px,1240px,0) rotate(-70deg); opacity: 0; }
-        }
-        @keyframes falling2 {
-            0% { transform: translate3d(0,0,0) rotate(90deg); }
-            100% { transform: translate3d(-400px,1280px,0) rotate(0deg); opacity: 0; }
-        }
-
-        /* Canvas styles from original query */
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        /* Dandelion Wind Seeds Animation */
-        #dandelion-wind {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        /* One seed (achene + parachute) */
-        .seed {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            opacity: 0;
-            transform: translate3d(0,0,0);
-            will-change: transform, opacity;
-            animation:
-                seed-fade 9s linear forwards,
-                seed-drift var(--dur, 12s) linear forwards;
-        }
-
-        /* The "parachute" (pappus) */
-        .seed::before {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 14px;
-            height: 14px;
-            transform: translateX(-50%);
-            border-radius: 50%;
-            background:
-                radial-gradient(circle at 50% 50%, rgba(192,192,192,.9) 10%, rgba(169,169,169,.6) 65%, rgba(128,128,128,.0) 85%);
-            box-shadow: 0 0 8px 0 rgba(192,192,192,.7), 0 0 3px 0 rgba(128,128,128,.5);
-            opacity: .9;
-        }
-
-        /* The achene (little seed body) */
-        .seed::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: 1px;
-            width: 2px;
-            height: 7px;
-            transform: translateX(-50%);
-            border-radius: 2px;
-            background: linear-gradient(#7b5a3a, #3e2d1e);
-            box-shadow: 0 0 2px rgba(0,0,0,.15);
-        }
-
-        /* Path the seed takes: gentle meander with lift + drift */
-        @keyframes seed-drift {
-            0%   { transform: translate3d(var(--sx0, 0px),   var(--sy0, 0px), 0) rotate(0deg);   }
-            20%  { transform: translate3d(var(--sx1, 80px),  var(--sy1, -40px),0) rotate(20deg); }
-            40%  { transform: translate3d(var(--sx2, 160px), var(--sy2, -10px),0) rotate(8deg);  }
-            60%  { transform: translate3d(var(--sx3, 260px), var(--sy3, -60px),0) rotate(25deg); }
-            80%  { transform: translate3d(var(--sx4, 360px), var(--sy4, -20px),0) rotate(12deg); }
-            100% { transform: translate3d(var(--sx5, 460px), var(--sy5, -80px),0) rotate(30deg); }
-        }
-
-        /* fade in/out */
-        @keyframes seed-fade {
-            0%   { opacity: 0; }
-            8%   { opacity: .9; }
-            85%  { opacity: .9; }
-            100% { opacity: 0; }
-        }
-
-        /* small side-to-side flutter */
-        .flutter {
-            animation-name: seed-fade, seed-drift, seed-flutter;
-            animation-duration: 9s, var(--dur, 12s), 2.6s;
-            animation-timing-function: linear, linear, ease-in-out;
-            animation-iteration-count: 1, 1, infinite;
-        }
-        
-        @keyframes seed-flutter {
-            0%, 100% { transform: translateX(0px); }
-            50% { transform: translateX(3px); }
-        }
-
-        /* OUTER: vertical fall only */
-        #sakura-about .petal {
-            position: absolute;
-            top: -8vh;
-            left: calc(var(--x, 50) * 1%);
-            animation: petal-fall var(--dur, 12s) linear infinite;
-            will-change: transform, opacity;
-            opacity: 0; /* fade in handled in keyframes */
-        }
-
-        /* INNER SHAPE: nicer teardrop + sway + spin */
-        #sakura-about .petal .shape {
-            display: block;
-            width: 14px;
-            height: 20px;
-            background: radial-gradient(70% 90% at 45% 50%, #ffd8e7 0 55%, #f7a0c2 60% 100%);
-            border-radius: 60% 60% 80% 80% / 70% 70% 35% 35%;
-            transform: rotate(-12deg); /* teardrop tilt */
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,.12));
-            animation:
-                petal-sway var(--sway, 3.6s) ease-in-out infinite,
-                petal-spin var(--spin, 5s) ease-in-out infinite;
-            transform-origin: 50% 55%;
-            position: relative;
-        }
-
-        /* tiny notch / fold hint */
-        #sakura-about .petal .shape::after {
-            content: '';
-            position: absolute;
-            right: 1px;
-            top: 45%;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,255,255,0) 70%);
-            opacity: .7;
-        }
-
-        /* Size/variety */
-        #sakura-about .petal:nth-child(3n) .shape {
-            width: 12px;
-            height: 20px;
-            transform: rotate(-8deg);
-        }
-        #sakura-about .petal:nth-child(5n) .shape {
-            width: 16px;
-            height: 22px;
-            transform: rotate(-15deg);
-        }
-
-        /* Keyframes */
-        @keyframes petal-fall {
-            0%   { transform: translateY(-8vh) rotate(0deg); opacity: 0; }
-            5%   { opacity: 1; }
-            100% { transform: translateY(110vh) rotate(90deg); opacity: 0; }
-        }
-        @keyframes petal-sway {
-            0%   { transform: translateX(0) rotate(var(--tilt, -12deg)); }
-            50%  { transform: translateX(16px) rotate(calc(var(--tilt, -12deg) + 6deg)); }
-            100% { transform: translateX(0) rotate(var(--tilt, -12deg)); }
-        }
-        @keyframes petal-spin {
-            0%   { transform: rotateX(0) rotateY(0); }
-            50%  { transform: rotateX(35deg) rotateY(35deg); }
-            100% { transform: rotateX(0) rotateY(0); }
-        }
-
-        /* Respect reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            #sakura-about .petal .shape {
-                animation: petal-sway 5s ease-in-out infinite;
-            }
-        }
-        
-        /* Body styles from original query */
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
-    </style>
+  <!-- Site styles -->
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <div id="preloader"><span id="preloader-percent">0%</span></div>
-    
-    <canvas id="particle-canvas"></canvas>
+  <!-- Preloader -->
+  <div id="preloader"><span id="preloader-percent">0%</span></div>
 
-    <!-- Simplified and improved SVG Snitch Cursor -->
-    <div id="snitch-cursor">
-        <svg id="snitch-svg" viewBox="0 0 100 100" width="80" height="80">
-            <defs>
-                <radialGradient id="gold-gradient" cx="0.4" cy="0.4" r="0.6">
-                    <stop offset="0%" stop-color="#fffbe6"/>
-                    <stop offset="18%" stop-color="#ffe066"/>
-                    <stop offset="38%" stop-color="#FFD700"/>
-                    <stop offset="60%" stop-color="#E6B7A9"/> <!-- Rose gold -->
-                    <stop offset="80%" stop-color="#FFA500"/>
-                    <stop offset="100%" stop-color="#B8860B"/>
-                </radialGradient>
-                <linearGradient id="wing-gold-gradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#fffbe6" stop-opacity="0.95"/>
-                    <stop offset="30%" stop-color="#ffe066" stop-opacity="0.8"/>
-                    <stop offset="60%" stop-color="#FFD700" stop-opacity="0.7"/>
-                    <stop offset="100%" stop-color="#B8860B" stop-opacity="0.3"/>
-                </linearGradient>
-                <filter id="wing-glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
-                    <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-            <!-- Left Wing -->
-            <g id="left-wing">
-                 <path d="M 35,50 Q 10,40 5,20 Q 15,45 35,50 Z" fill="url(#wing-gold-gradient)" stroke="#B8860B" stroke-width="1.3" filter="url(#wing-glow)"/>
-                 <!-- Feather details, more lines for realism -->
-                 <path d="M 32,48 Q 18,38 8,25" stroke="#FFD700" stroke-width="0.7" fill="none" opacity="0.8"/>
-                 <path d="M 28,47 Q 15,37 7,22" stroke="#FFD700" stroke-width="0.5" fill="none" opacity="0.6"/>
-                 <path d="M 30,49 Q 20,42 12,28" stroke="#fffbe6" stroke-width="0.4" fill="none" opacity="0.5"/>
-                 <path d="M 26,46 Q 13,34 6,19" stroke="#ffe066" stroke-width="0.3" fill="none" opacity="0.4"/>
-                 <line x1="30" y1="48" x2="15" y2="35" stroke="#B8860B" stroke-width="0.8"/>
-                 <line x1="25" y1="49" x2="10" y2="40" stroke="#B8860B" stroke-width="0.8"/>
-                 <!-- Subtle shimmer and highlight -->
-                 <path d="M 20,35 Q 15,30 10,25" stroke="#fff" stroke-width="0.4" fill="none" opacity="0.5"/>
-                 <path d="M 18,32 Q 13,27 8,22" stroke="#fffbe6" stroke-width="0.3" fill="none" opacity="0.3"/>
-            </g>
-            <!-- Right Wing -->
-             <g id="right-wing">
-                <path d="M 65,50 Q 90,40 95,20 Q 85,45 65,50 Z" fill="url(#wing-gold-gradient)" stroke="#B8860B" stroke-width="1.3" filter="url(#wing-glow)"/>
-                <!-- Feather details, more lines for realism -->
-                <path d="M 68,48 Q 82,38 92,25" stroke="#FFD700" stroke-width="0.7" fill="none" opacity="0.8"/>
-                <path d="M 72,47 Q 85,37 93,22" stroke="#FFD700" stroke-width="0.5" fill="none" opacity="0.6"/>
-                <path d="M 70,49 Q 80,42 88,28" stroke="#fffbe6" stroke-width="0.4" fill="none" opacity="0.5"/>
-                <path d="M 74,46 Q 87,34 94,19" stroke="#ffe066" stroke-width="0.3" fill="none" opacity="0.4"/>
-                <line x1="70" y1="48" x2="85" y2="35" stroke="#B8860B" stroke-width="0.8"/>
-                <line x1="75" y1="49" x2="90" y2="40" stroke="#B8860B" stroke-width="0.8"/>
-                <!-- Subtle shimmer and highlight -->
-                <path d="M 80,35 Q 85,30 90,25" stroke="#fff" stroke-width="0.4" fill="none" opacity="0.5"/>
-                <path d="M 82,32 Q 87,27 92,22" stroke="#fffbe6" stroke-width="0.3" fill="none" opacity="0.3"/>
-            <!-- Add a brownish radial gradient for the snitch body -->
-            <defs>
-                <radialGradient id="gold-gradient" cx="0.4" cy="0.4" r="0.6">
-                    <stop offset="0%" stop-color="#fffbe6"/>
-                    <stop offset="20%" stop-color="#ffe066"/>
-                    <stop offset="50%" stop-color="#FFD700"/>
-                    <stop offset="80%" stop-color="#FFA500"/>
-                    <stop offset="100%" stop-color="#B8860B"/>
-                </radialGradient>
-                <linearGradient id="wing-gold-gradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#fffbe6" stop-opacity="0.95"/>
-                    <stop offset="30%" stop-color="#ffe066" stop-opacity="0.8"/>
-                    <stop offset="60%" stop-color="#FFD700" stop-opacity="0.7"/>
-                    <stop offset="100%" stop-color="#B8860B" stop-opacity="0.3"/>
-                </linearGradient>
-                <radialGradient id="brownish-gold" cx="0.5" cy="0.5" r="0.7">
-                    <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
-                    <stop offset="60%" stop-color="#B8860B" stop-opacity="0.7"/>
-                    <stop offset="100%" stop-color="#6b3e1d" stop-opacity="0.8"/>
-                </radialGradient>
-                <filter id="wing-glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
-                    <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-            <defs>
-                <radialGradient id="wing-gradient" cx="0.5" cy="0.3" r="0.9">
-                    <stop offset="0%" stop-color="#fff" stop-opacity="0.95"/>
-                    <stop offset="60%" stop-color="#FFD700" stop-opacity="0.5"/>
-                    <stop offset="100%" stop-color="#B8860B" stop-opacity="0.2"/>
-                </radialGradient>
-                <filter id="wing-glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
-                    <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-            </g>
-            <!-- Body -->
-            <circle cx="50" cy="50" r="15" fill="url(#gold-gradient)" stroke="#2d1810" stroke-width="2"/>
-            <!-- Extra golden highlight for visibility -->
-            <circle cx="50" cy="50" r="12" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.6"/>
-            <!-- Extra golden highlight for visibility -->
-            <circle cx="50" cy="50" r="12" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.6"/>
-        </svg>
-    </div>
+  <!-- Particles canvas -->
+  <canvas id="particle-canvas"></canvas>
 
-    <div class="labubu-container hidden md:flex">
-        <div id="labubu-bubble">
-            <p id="labubu-text">Hi!</p>
-        </div>
-        <div class="labubu-character">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><g><!-- Ears --><path d="M25 40 C 15 10, 35 10, 30 40" fill="#E11D48"/><path d="M75 40 C 85 10, 65 10, 70 40" fill="#E11D48"/><!-- Head --><ellipse cx="50" cy="65" rx="35" ry="30" fill="#FBE2E3"/><path d="M15 65 C 20 95, 80 95, 85 65" fill="#FBE2E3"/><!-- Face --><circle cx="40" cy="60" r="3" fill="#4B5563"/><circle cx="60" cy="60" r="3" fill="#4B5563"/><path d="M48 70 Q 50 75, 52 70" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></g></svg>
-        </div>
-    </div>
-
-    <!-- Header & Navigation -->
-    <header class="bg-white/70 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#home" id="logo-name" class="text-gray-900 magnetic-link">Srishti Soni</a>
-            <div class="hidden md:flex items-center space-x-2">
-                <a href="#about" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">About</a>
-                <a href="#experience" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Experience</a>
-                <a href="#projects" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Projects</a>
-                <a href="#skills" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Skills</a>
-                <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 hover-transition shadow-sm hover:shadow-md magnetic-link sparkle-hover">Contact</a>
-            </div>
-             <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-        </nav>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2 bg-white/90">
-             <a href="#about" class="block text-gray-600 hover:text-rose-600 hover-transition">About</a>
-             <a href="#experience" class="block text-gray-600 hover:text-rose-600 hover-transition">Experience</a>
-             <a href="#projects" class="block text-gray-600 hover:text-rose-600 hover-transition">Projects</a>
-             <a href="#skills" class="block text-gray-600 hover:text-rose-600 hover-transition">Skills</a>
-             <a href="#contact" class="block bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover-transition mt-2 text-center">Contact</a>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section id="home" class="panel">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="text-center md:text-left">
-                     <div class="mt-2 gsap-reveal">
-    <img src="img\1.jpg" alt="Srishti Soni"
-         class="mx-auto md:mx-0 rounded-full shadow-2xl w-52 h-52 object-cover" />
+  <!-- Golden Snitch cursor -->
+  <div id="snitch-cursor">
+    <svg id="snitch-svg" viewBox="0 0 100 100" width="80" height="80">
+      <defs>
+        <radialGradient id="gold-gradient" cx="0.4" cy="0.4" r="0.6">
+          <stop offset="0%" stop-color="#fffbe6"/>
+          <stop offset="18%" stop-color="#ffe066"/>
+          <stop offset="38%" stop-color="#FFD700"/>
+          <stop offset="60%" stop-color="#E6B7A9"/>
+          <stop offset="80%" stop-color="#FFA500"/>
+          <stop offset="100%" stop-color="#B8860B"/>
+        </radialGradient>
+        <linearGradient id="wing-gold-gradient" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fffbe6" stop-opacity="0.95"/>
+          <stop offset="30%" stop-color="#ffe066" stop-opacity="0.8"/>
+          <stop offset="60%" stop-color="#FFD700" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#B8860B" stop-opacity="0.3"/>
+        </linearGradient>
+        <filter id="wing-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <g id="left-wing">
+        <path d="M 35,50 Q 10,40 5,20 Q 15,45 35,50 Z" fill="url(#wing-gold-gradient)" stroke="#B8860B" stroke-width="1.3" filter="url(#wing-glow)"/>
+        <path d="M 32,48 Q 18,38 8,25" stroke="#FFD700" stroke-width="0.7" fill="none" opacity="0.8"/>
+        <path d="M 28,47 Q 15,37 7,22" stroke="#FFD700" stroke-width="0.5" fill="none" opacity="0.6"/>
+        <path d="M 30,49 Q 20,42 12,28" stroke="#fffbe6" stroke-width="0.4" fill="none" opacity="0.5"/>
+        <path d="M 26,46 Q 13,34 6,19" stroke="#ffe066" stroke-width="0.3" fill="none" opacity="0.4"/>
+        <line x1="30" y1="48" x2="15" y2="35" stroke="#B8860B" stroke-width="0.8"/>
+        <line x1="25" y1="49" x2="10" y2="40" stroke="#B8860B" stroke-width="0.8"/>
+        <path d="M 20,35 Q 15,30 10,25" stroke="#fff" stroke-width="0.4" fill="none" opacity="0.5"/>
+        <path d="M 18,32 Q 13,27 8,22" stroke="#fffbe6" stroke-width="0.3" fill="none" opacity="0.3"/>
+      </g>
+      <g id="right-wing">
+        <path d="M 65,50 Q 90,40 95,20 Q 85,45 65,50 Z" fill="url(#wing-gold-gradient)" stroke="#B8860B" stroke-width="1.3" filter="url(#wing-glow)"/>
+        <path d="M 68,48 Q 82,38 92,25" stroke="#FFD700" stroke-width="0.7" fill="none" opacity="0.8"/>
+        <path d="M 72,47 Q 85,37 93,22" stroke="#FFD700" stroke-width="0.5" fill="none" opacity="0.6"/>
+        <path d="M 70,49 Q 80,42 88,28" stroke="#fffbe6" stroke-width="0.4" fill="none" opacity="0.5"/>
+        <path d="M 74,46 Q 87,34 94,19" stroke="#ffe066" stroke-width="0.3" fill="none" opacity="0.4"/>
+        <line x1="70" y1="48" x2="85" y2="35" stroke="#B8860B" stroke-width="0.8"/>
+        <line x1="75" y1="49" x2="90" y2="40" stroke="#B8860B" stroke-width="0.8"/>
+        <path d="M 80,35 Q 85,30 90,25" stroke="#fff" stroke-width="0.4" fill="none" opacity="0.5"/>
+        <path d="M 82,32 Q 87,27 92,22" stroke="#fffbe6" stroke-width="0.3" fill="none" opacity="0.3"/>
+      </g>
+      <circle cx="50" cy="50" r="15" fill="url(#gold-gradient)" stroke="#2d1810" stroke-width="2"/>
+      <circle cx="50" cy="50" r="12" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.6"/>
+    </svg>
   </div>
-                    <h1 class="text-4xl md:text-4xl font-extrabold text-gray-900 leading-tight gsap-reveal-chars mt-4">Software Developer & Creative Problem Solver</h1>
-                    
-                    <p class="mt-12 text-lg text-gray-600 max-w-xl mx-auto md:mx-0 gsap-reveal">I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.</p>
-                    <div class="mt-8 flex justify-center md:justify-start items-center space-x-4 gsap-reveal">
-                         <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link">Get in Touch</a>
-                         <a href="https://drive.google.com/file/d/1BCEplIbJVGY144qIA5I37yWh6MDl48TQ/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link">Download Resume &rarr;</a>
-                         
-                         <!-- Social Media Icons -->
-                         <a href="https://github.com/shimmer12" target="_blank" class="text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link p-2 rounded-full hover:bg-gray-100" title="GitHub">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                         </a>
-                         <a href="https://leetcode.com/u/shimmer2002/" target="_blank" class="text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link p-2 rounded-full hover:bg-gray-100" title="LeetCode">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/>
-                            </svg>
-                         </a>
-                         <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link p-2 rounded-full hover:bg-gray-100" title="LinkedIn">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                            </svg>
-                         </a>
-                    </div>
-                </div>
-                <div class="flex justify-center items-center gsap-reveal">
-                    <svg class="w-80 h-80 md:w-96 md:h-96" viewBox="0 0 200 200">
-                        <defs>
-                            <linearGradient id="postGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#FDE047" /> <!-- yellow-300 -->
-                                <stop offset="100%" style="stop-color:#F59E0B" /> <!-- amber-500 -->
-                            </linearGradient>
-                        </defs>
-                        <!-- Posts -->
-                        <rect x="40" y="50" width="10" height="150" fill="url(#postGradient)" rx="5" />
-                        <rect x="95" y="30" width="10" height="170" fill="url(#postGradient)" rx="5" />
-                        <rect x="150" y="50" width="10" height="150" fill="url(#postGradient)" rx="5" />
-                        <!-- Hoops -->
-                        <circle cx="45" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none" />
-                        <circle cx="100" cy="30" r="25" stroke="url(#postGradient)" stroke-width="8" fill="none" />
-                        <circle cx="155" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none" />
-                    </svg>
-                </div>
-            </div>
-        </section>
-        
-        <!-- About Me Section -->
-<section id="about" class="panel relative overflow-hidden">
-  <!-- Canvas for petal animation -->
-  <canvas></canvas>
 
-  <!-- your content/card sits ABOVE petals -->
-  <div class="about-card relative z-10 bg-white rounded-2xl shadow-lg max-w-3xl mx-auto p-10">
-    <h2 class="text-3xl font-bold mb-8 gsap-reveal-chars section-heading">About Me</h2>
-    <p class="text-lg text-gray-600 gsap-reveal leading-relaxed mb-6">
-      Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.
-    </p>
-
-    <ul class="mt-10 text-base text-gray-700 space-y-6 text-left">
-      <li class="flex items-start gsap-reveal">
-        <span class="text-rose-500 font-bold mr-3">&rarr;</span> 
-        <strong>Problem Solving:</strong>&nbsp; Solved 1000+ questions on LeetCode, 600-day streak.
-      </li>
-      <li class="flex items-start gsap-reveal">
-        <span class="text-rose-500 font-bold mr-3">&rarr;</span> 
-        <strong>Technical Proficiency:</strong>&nbsp; Strong in DSA & full-stack web development.
-      </li>
-      <li class="flex items-start gsap-reveal">
-        <span class="text-rose-500 font-bold mr-3">&rarr;</span> 
-        <strong>Practical Experience:</strong>&nbsp; Projects and internships at NTPC & CSPDCL.
-      </li>
-    </ul>
+  <!-- Labubu -->
+  <div class="labubu-container hidden md:flex">
+    <div id="labubu-bubble"><p id="labubu-text">Hi!</p></div>
+    <div class="labubu-character">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><g>
+        <path d="M25 40 C 15 10, 35 10, 30 40" fill="#E11D48"/>
+        <path d="M75 40 C 85 10, 65 10, 70 40" fill="#E11D48"/>
+        <ellipse cx="50" cy="65" rx="35" ry="30" fill="#FBE2E3"/>
+        <path d="M15 65 C 20 95, 80 95, 85 65" fill="#FBE2E3"/>
+        <circle cx="40" cy="60" r="3" fill="#4B5563"/>
+        <circle cx="60" cy="60" r="3" fill="#4B5563"/>
+        <path d="M48 70 Q 50 75, 52 70" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/>
+      </g></svg>
+    </div>
   </div>
-</section>
 
+  <!-- Header -->
+  <header class="bg-white/70 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#home" id="logo-name" class="text-gray-900 magnetic-link">Srishti Soni</a>
+      <div class="hidden md:flex items-center space-x-2">
+        <a href="#about" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">About</a>
+        <a href="#experience" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Experience</a>
+        <a href="#projects" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Projects</a>
+        <a href="#skills" class="text-gray-600 hover:text-rose-600 hover-transition px-4 py-2 magnetic-link sparkle-hover">Skills</a>
+        <a href="#contact" class="bg-rose-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-rose-700 hover-transition shadow-sm hover:shadow-md magnetic-link sparkle-hover">Contact</a>
+      </div>
+      <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none" aria-label="Open menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2 bg-white/90">
+      <a href="#about" class="block text-gray-600 hover:text-rose-600 hover-transition">About</a>
+      <a href="#experience" class="block text-gray-600 hover:text-rose-600 hover-transition">Experience</a>
+      <a href="#projects" class="block text-gray-600 hover:text-rose-600 hover-transition">Projects</a>
+      <a href="#skills" class="block text-gray-600 hover:text-rose-600 hover-transition">Skills</a>
+      <a href="#contact" class="block bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover-transition mt-2 text-center">Contact</a>
+    </div>
+  </header>
 
-        <!-- Experience Section -->
-        <section id="experience" class="panel">
-             <div id="leaves"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <div class="w-full max-w-4xl">
-                <h2 class="text-4xl font-bold text-center mb-16 gsap-reveal-chars section-heading">Professional Experience</h2>
-                <div class="max-w-3xl mx-auto relative">
-                    <div class="border-l-2 border-rose-200 absolute h-full top-0 left-[-20px]"></div>
-                    <div class="mb-12 relative timeline-item pl-8 gsap-reveal">
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <div class="flex justify-between items-start">
-                               <div><h3 class="text-xl font-semibold text-gray-900 mb-1">Software Developer Intern</h3><p class="text-rose-600 font-medium">NTPC</p></div>
-                               <span class="text-gray-500 text-sm font-medium">Jun 2024 - Jul 2024</span>
-                            </div>
-                            <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
-                                <li>Developed and implemented a Django-based Inventory Management System featuring CRUD operations and dynamic data visualizations using Chart.js.</li>
-                                <li>Optimized MySQL database interactions, enhancing system efficiency and data management.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="relative timeline-item pl-8 gsap-reveal">
-                         <div class="bg-white p-6 rounded-lg shadow-md">
-                             <div class="flex justify-between items-start">
-                                <div><h3 class="text-xl font-semibold text-gray-900 mb-1">Industrial Intern</h3><p class="text-rose-600 font-medium">CSPDCL</p></div>
-                                <span class="text-gray-500 text-sm font-medium">Jun 2023 - Jul 2023</span>
-                            </div>
-                            <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
-                                <li>Designed and deployed a File Tracking System to streamline project approvals.</li>
-                                <li>Built Django applications, integrating models, views, templates, and URL routing.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+  <main>
+    <!-- Hero -->
+    <section id="home" class="panel">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="text-center md:text-left">
+          <div class="mt-2 gsap-reveal">
+            <img src="img/1.jpg" alt="Srishti Soni"
+                 class="mx-auto md:mx-0 rounded-full shadow-2xl w-52 h-52 object-cover"/>
+          </div>
+          <h1 class="text-4xl md:text-4xl font-extrabold text-gray-900 leading-tight gsap-reveal-chars mt-4">
+            Software Developer & Creative Problem Solver
+          </h1>
+          <p class="mt-12 text-lg text-gray-600 max-w-xl mx-auto md:mx-0 gsap-reveal">
+            I'm Srishti Soni, an aspiring Software Engineer passionate about building efficient web applications and solving complex problems with data and algorithms.
+          </p>
+          <div class="mt-8 flex justify-center md:justify-start items-center space-x-4 gsap-reveal">
+            <a href="mailto:imsrishti1202@gmail.com" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link">
+              Get in Touch
+            </a>
+            <a href="https://drive.google.com/file/d/1BCEplIbJVGY144qIA5I37yWh6MDl48TQ/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link">
+              Download Resume &rarr;
+            </a>
+            <!-- Socials -->
+            <a href="https://github.com/shimmer12" target="_blank" class="text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link p-2 rounded-full hover:bg-gray-100" title="GitHub">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://leetcode.com/u/shimmer2002/" target="_blank" class="text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link p-2 rounded-full hover:bg-gray-100" title="LeetCode">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="text-gray-700 hover:text-rose-600 transition duration-300 magnetic-link p-2 rounded-full hover:bg-gray-100" title="LinkedIn">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="flex justify-center items-center gsap-reveal">
+          <!-- Poles -->
+          <svg class="w-80 h-80 md:w-96 md:h-96" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="postGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#FDE047"/>
+                <stop offset="100%" style="stop-color:#F59E0B"/>
+              </linearGradient>
+            </defs>
+            <rect x="40" y="50" width="10" height="150" fill="url(#postGradient)" rx="5"/>
+            <rect x="95" y="30" width="10" height="170" fill="url(#postGradient)" rx="5"/>
+            <rect x="150" y="50" width="10" height="150" fill="url(#postGradient)" rx="5"/>
+            <circle cx="45" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none"/>
+            <circle cx="100" cy="30" r="25" stroke="url(#postGradient)" stroke-width="8" fill="none"/>
+            <circle cx="155" cy="50" r="20" stroke="url(#postGradient)" stroke-width="8" fill="none"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="panel relative overflow-hidden">
+      <canvas></canvas>
+      <div class="about-card relative z-10 bg-white rounded-2xl shadow-lg max-w-3xl mx-auto p-10">
+        <h2 class="text-3xl font-bold mb-8 gsap-reveal-chars section-heading">About Me</h2>
+        <p class="text-lg text-gray-600 gsap-reveal leading-relaxed mb-6">
+          Hello! I'm a 2025 Computer Science and Engineering graduate with a passion for problem-solving and web development. I am an avid learner dedicated to building practical and efficient applications.
+        </p>
+        <ul class="mt-10 text-base text-gray-700 space-y-6 text-left">
+          <li class="flex items-start gsap-reveal">
+            <span class="text-rose-500 font-bold mr-3">&rarr;</span>
+            <strong>Problem Solving:</strong>&nbsp; Solved 1000+ questions on LeetCode, 600-day streak.
+          </li>
+          <li class="flex items-start gsap-reveal">
+            <span class="text-rose-500 font-bold mr-3">&rarr;</span>
+            <strong>Technical Proficiency:</strong>&nbsp; Strong in DSA & full-stack web development.
+          </li>
+          <li class="flex items-start gsap-reveal">
+            <span class="text-rose-500 font-bold mr-3">&rarr;</span>
+            <strong>Practical Experience:</strong>&nbsp; Projects and internships at NTPC & CSPDCL.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="panel">
+      <div id="leaves"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="w-full max-w-4xl">
+        <h2 class="text-4xl font-bold text-center mb-16 gsap-reveal-chars section-heading">Professional Experience</h2>
+        <div class="max-w-3xl mx-auto relative">
+          <div class="border-l-2 border-rose-200 absolute h-full top-0 left-[-20px]"></div>
+          <div class="mb-12 relative timeline-item pl-8 gsap-reveal">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+              <div class="flex justify-between items-start">
+                <div><h3 class="text-xl font-semibold text-gray-900 mb-1">Software Developer Intern</h3><p class="text-rose-600 font-medium">NTPC</p></div>
+                <span class="text-gray-500 text-sm font-medium">Jun 2024 - Jul 2024</span>
+              </div>
+              <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
+                <li>Developed and implemented a Django-based Inventory Management System featuring CRUD operations and dynamic data visualizations using Chart.js.</li>
+                <li>Optimized MySQL database interactions, enhancing system efficiency and data management.</li>
+              </ul>
             </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="panel bg-white relative overflow-hidden">
-             <!-- Dandelion wind seeds -->
-             <div id="dandelion-wind" aria-hidden="true"></div>
-             <div class="w-full max-w-5xl relative z-10">
-                <h2 class="text-4xl font-bold text-center mb-16 gsap-reveal-chars section-heading">My Projects</h2>
-                <div class="bg-rose-50 rounded-lg shadow-lg overflow-hidden group gsap-reveal">
-                    <div class="grid md:grid-cols-2">
-                        <div class="p-8">
-                            <h3 class="text-2xl font-bold text-gray-900">Bhagavad Gita AI Analysis System</h3>
-                            <p class="mt-4 text-gray-600">Engineered an LLM-powered system for deep textual analysis, leveraging generative AI to extract themes and generate insights.</p>
-                            <div class="mt-6 flex flex-wrap gap-3">
-                               <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Python</span>
-                               <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">LangChain</span>
-                               <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Generative AI</span>
-                            </div>
-                            <div class="mt-8">
-                               <a href="https://github.com/shimmer12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link">View on GitHub <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
-                           </div>
-                        </div>
-                        <div class="bg-rose-100 flex items-center justify-center">
-                            <img src="https://placehold.co/600x400/FBE2E3/450A0A?text=Project+Preview" alt="Project Preview" class="object-cover w-full h-full">
-                        </div>
-                    </div>
-               </div>
-             </div>
-        </section>
-        
-        <!-- Skills & Contact Section -->
-        <section id="skills" class="panel relative overflow-hidden">
-            <!-- Background Sparkles -->
-            <div id="skills-sparkles" class="absolute inset-0 pointer-events-none"></div>
-            
-            <div class="w-full max-w-6xl text-center relative z-10">
-                <div class="gsap-reveal">
-                    <h2 class="text-4xl font-bold text-center mb-8 gsap-reveal-chars section-heading">Technical Skills</h2>
-                    <p class="text-center text-gray-600 mb-16 text-lg">Technologies and Tools.</p>
-                    <div class="scroller" data-animated="true">
-<ul class="scroller__inner">
-    <li class="skill-item">
-        <!-- C++ -->
-        <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 210" preserveAspectRatio="xMidYMid meet">
-            <title>C++</title>
-            <g transform="translate(0.000000,210.000000) scale(0.100000,-0.100000)" fill="#00599C">
-                <path d="M1293 1891 c-121 -25 -275 -118 -384 -233 -238 -250 -306 -622 -171 -929 119 -270 374 -464 661 -503 103 -14 368 -1 487 23 294 60 557 231 712 597 26 62 108 276 108 281 0 5 -25 21 -55 35 -147 69 -312 91 -462 62 -72 -14 -125 -10 -182 14 -194 82 -323 277 -342 516 -9 111 27 231 95 316 119 220 380 341 645 300 91 -14 117 -13 185 8 184 57 325 210 371 400 13 54 13 64 2 113 -21 93 -81 189 -153 245 -141 108 -342 146 -525 101z m432 -332 c123 -51 213 -148 247 -264 45 -151 -31 -316 -169 -365 -67 -24 -153 -10 -217 35 -133 93 -188 261 -127 386 71 146 226 211 366 108z m-705 -664 c116 -48 209 -141 254 -254 53 -134 -6 -298 -130 -365 -158 -86 -351 -29 -429 126 -65 131 -48 316 38 410 88 97 225 132 367 83z"/>
-                <path d="M7180 1050 l0 -980 90 0 90 0 0 980 0 980 -90 0 -90 0 0 -980z"/>
-                <path d="M9470 1515 l0 -445 -445 0 -445 0 0 -90 0 -90 445 0 445 0 0 -445 0 -445 90 0 90 0 0 445 0 445 445 0 445 0 0 90 0 90 -445 0 -445 0 0 445 0 445 -90 0 -90 0z"/>
-                <path d="M12140 1050 l0 -980 90 0 90 0 0 980 0 980 -90 0 -90 0 0 -980z"/>
-                <path d="M14430 1515 l0 -445 -445 0 -445 0 0 -90 0 -90 445 0 445 0 0 -445 0 -445 90 0 90 0 0 445 0 445 445 0 445 0 0 90 0 90 -445 0 -445 0 0 445 0 445 -90 0 -90 0z"/>
-            </g>
-        </svg>
-        <span>C++</span>
-    </li>
-    <li class="skill-item">
-        <!-- Python -->
-        <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <title>Python</title>
-            <path fill="#3776AB" d="M12.5 2.1c-1.6 0-3.3.2-4.9.5-.6.2-1 1-1 1.6l-.2 1.1c-.2 1.2.1 2.4 1 3.2.6.6 1.5.9 2.3.9H13v-2.2H9.7c-.4 0-.8-.2-1-.6-.3-.5-.2-1.1.2-1.5.7-.7 1.9-.9 2.8-.9 1.4 0 2.5.2 3.7.2 1.1 0 2.1-.4 2.8-1.2.7-.8 1-1.9.7-3-.2-.8-1-1.5-1.9-1.6-1.1-.2-2.3-.3-3.5-.3z"/>
-            <path fill="#FFD43B" d="M11.5 21.9c1.6 0 3.3-.2 4.9-.5.6-.2 1-1 1-1.6l.2-1.1c.2-1.2-.1-2.4-1-3.2-.6-.6-1.5-.9-2.3-.9H11v2.2h3.3c.4 0 .8.2 1 .6.3.5.2 1.1-.2 1.5-.7.7-1.9.9-2.8.9-1.4 0-2.5-.2-3.7-.2-1.1 0-2.1.4-2.8 1.2-.7.8-1 1.9-.7 3 .2.8 1 1.5 1.9 1.6 1.1.2 2.3.3 3.5.3z"/>
-        </svg>
-        <span>Python</span>
-    </li>
-    <li class="skill-item">
-        <!-- HTML5 -->
-        <img src="https://cdn.simpleicons.org/html5/E34F26" alt="HTML5">
-        <span>HTML</span>
-    </li>
-    <li class="skill-item">
-        <!-- CSS3 -->
-        <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-labelledby="css3Title">
-            <title id="css3Title">CSS3</title>
-            <path fill="#1572B6" d="M71 460L30 0h452l-41 460-185 52"/>
-            <path fill="#33A9DC" d="M256 472l150-41 35-393H256"/>
-            <path fill="#fff" d="M256 208h-89l6 68h83v-68zm0-88h88l-6 68H256V120z"/>
-        </svg>
-        <span>CSS</span>
-    </li>
-    <li class="skill-item">
-        <!-- JavaScript -->
-        <img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript">
-        <span>JavaScript</span>
-    </li>
-    <li class="skill-item">
-        <!-- React -->
-        <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
-            <title>React</title>
-            <g fill="none" stroke="#61DAFB" stroke-width="24">
-                <ellipse cx="300" cy="300" rx="200" ry="80"/>
-                <ellipse cx="300" cy="300" rx="200" ry="80" transform="rotate(60 300 300)"/>
-                <ellipse cx="300" cy="300" rx="200" ry="80" transform="rotate(120 300 300)"/>
-            </g>
-            <circle cx="300" cy="300" r="30" fill="#61DAFB"/>
-        </svg>
-        <span>React</span>
-    </li>
-    <li class="skill-item">
-        <!-- MySQL -->
-        <img src="https://cdn.simpleicons.org/mysql/00758F" alt="MySQL">
-        <span>MySQL</span>
-    </li>
-    <li class="skill-item">
-        <!-- Git -->
-        <img src="https://cdn.simpleicons.org/git/F05033" alt="Git">
-        <span>Git</span>
-    </li>
-    <li class="skill-item">
-        <!-- GitHub -->
-        <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <title>GitHub</title>
-            <rect width="512" height="512" rx="15%" fill="#181717"/>
-            <path fill="#fff" d="M256 32C132 32 32 132 32 256c0 98 64 182 153 211 11 2 15-5 15-11v-38c-62 13-75-30-75-30-10-27-26-34-26-34-21-14 2-14 2-14 23 2 35 24 35 24 21 35 54 25 67 19 2-15 8-25 14-31-51-6-105-26-105-114 0-25 9-46 24-62-2-6-11-29 2-61 0 0 20-6 64 24a223 223 0 0 1 116 0c44-30 64-24 64-24 13 32 5 55 2 61 15 16 24 37 24 62 0 88-54 108-105 114 9 8 16 23 16 45v67c0 6 4 13 15 11 89-29 153-113 153-211C480 132 380 32 256 32z"/>
-        </svg>
-        <span>GitHub</span>
-    </li>
-</ul>
-                    </div>
-                </div>
-                <div id="contact" class="mt-20 gsap-reveal">
-                    <h2 class="text-4xl font-extrabold text-gray-900 section-heading">Let's Build Something Amazing.</h2>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!</p>
-                    <div class="mt-8 flex justify-center items-center space-x-4">
-                        <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
-                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                           <span>LinkedIn</span>
-                        </a>
-                        <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
-                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.107 10-8.107v11.817h-20z"/></svg>
-                           <span>Email Me</span>
-                        </a>
-                    </div>
-                </div>
+          </div>
+          <div class="relative timeline-item pl-8 gsap-reveal">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+              <div class="flex justify-between items-start">
+                <div><h3 class="text-xl font-semibold text-gray-900 mb-1">Industrial Intern</h3><p class="text-rose-600 font-medium">CSPDCL</p></div>
+                <span class="text-gray-500 text-sm font-medium">Jun 2023 - Jul 2023</span>
+              </div>
+              <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
+                <li>Designed and deployed a File Tracking System to streamline project approvals.</li>
+                <li>Built Django applications, integrating models, views, templates, and URL routing.</li>
+              </ul>
             </div>
-        </section>
-    </main>
-    
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
-    
-    <!-- Main Application Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- PRELOADER ---
-            const preloader = document.getElementById('preloader');
-            const preloaderPercent = document.getElementById('preloader-percent');
-            let loaded = 0;
-            let preloaderInterval = null;
+          </div>
+        </div>
+      </div>
+    </section>
 
-            function finishPreloader() {
-                // clear the interval if it's still running
-                if (preloaderInterval) {
-                    clearInterval(preloaderInterval);
-                    preloaderInterval = null;
-                }
+    <!-- Projects -->
+    <section id="projects" class="panel bg-white relative overflow-hidden">
+      <div id="dandelion-wind" aria-hidden="true"></div>
+      <div class="w-full max-w-5xl relative z-10">
+        <h2 class="text-4xl font-bold text-center mb-16 gsap-reveal-chars section-heading">My Projects</h2>
+        <div class="bg-rose-50 rounded-lg shadow-lg overflow-hidden group gsap-reveal">
+          <div class="grid md:grid-cols-2">
+            <div class="p-8">
+              <h3 class="text-2xl font-bold text-gray-900">Bhagavad Gita AI Analysis System</h3>
+              <p class="mt-4 text-gray-600">Engineered an LLM-powered system for deep textual analysis, leveraging generative AI to extract themes and generate insights.</p>
+              <div class="mt-6 flex flex-wrap gap-3">
+                <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Python</span>
+                <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">LangChain</span>
+                <span class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full text-sm font-medium">Generative AI</span>
+              </div>
+              <div class="mt-8">
+                <a href="https://github.com/shimmer12" target="_blank" class="font-semibold text-rose-600 hover:text-rose-800 transition duration-300 inline-flex items-center magnetic-link">
+                  View on GitHub
+                  <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="bg-rose-100 flex items-center justify-center">
+              <img src="https://placehold.co/600x400/FBE2E3/450A0A?text=Project+Preview" alt="Project Preview" class="object-cover w-full h-full">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-                // fade out and initialize animations (idempotent)
-                if (preloader.style.display !== 'none') {
-                    gsap.to(preloader, {
-                        opacity: 0,
-                        duration: 0.8,
-                        onComplete: () => {
-                            preloader.style.display = 'none';
-                            document.body.classList.add('loaded');
-                            try { initPageAnimations(); } catch (err) { console.error('initPageAnimations error', err); }
-                        }
-                    });
-                }
-            }
+    <!-- Skills & Contact -->
+    <section id="skills" class="panel relative overflow-hidden">
+      <div id="skills-sparkles" class="absolute inset-0 pointer-events-none"></div>
+      <div class="w-full max-w-6xl text-center relative z-10">
+        <div class="gsap-reveal">
+          <h2 class="text-4xl font-bold text-center mb-8 gsap-reveal-chars section-heading">Technical Skills</h2>
+          <p class="text-center text-gray-600 mb-16 text-lg">Technologies and Tools.</p>
 
-            preloaderInterval = setInterval(() => {
-                loaded++;
-                preloaderPercent.textContent = `${loaded}%`;
-                if (loaded >= 100) {
-                    finishPreloader();
-                }
-            }, 20);
+          <div class="scroller" data-animated="true">
+            <ul class="scroller__inner">
+              <li class="skill-item">
+                <!-- C++ -->
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 210" preserveAspectRatio="xMidYMid meet">
+                  <title>C++</title>
+                  <g transform="translate(0.000000,210.000000) scale(0.100000,-0.100000)" fill="#00599C">
+                    <path d="M1293 1891 c-121 -25 -275 -118 -384 -233 -238 -250 -306 -622 -171 -929 119 -270 374 -464 661 -503 103 -14 368 -1 487 23 294 60 557 231 712 597 26 62 108 276 108 281 0 5 -25 21 -55 35 -147 69 -312 91 -462 62 -72 -14 -125 -10 -182 14 -194 82 -323 277 -342 516 -9 111 27 231 95 316 119 220 380 341 645 300 91 -14 117 -13 185 8 184 57 325 210 371 400 13 54 13 64 2 113 -21 93 -81 189 -153 245 -141 108 -342 146 -525 101z m432 -332 c123 -51 213 -148 247 -264 45 -151 -31 -316 -169 -365 -67 -24 -153 -10 -217 35 -133 93 -188 261 -127 386 71 146 226 211 366 108z m-705 -664 c116 -48 209 -141 254 -254 53 -134 -6 -298 -130 -365 -158 -86 -351 -29 -429 126 -65 131 -48 316 38 410 88 97 225 132 367 83z"/>
+                    <path d="M7180 1050 l0 -980 90 0 90 0 0 980 0 980 -90 0 -90 0 0 -980z"/>
+                    <path d="M9470 1515 l0 -445 -445 0 -445 0 0 -90 0 -90 445 0 445 0 0 -445 0 -445 90 0 90 0 0 445 0 445 445 0 445 0 0 90 0 90 -445 0 -445 0 0 445 0 445 -90 0 -90 0z"/>
+                    <path d="M12140 1050 l0 -980 90 0 90 0 0 980 0 980 -90 0 -90 0 0 -980z"/>
+                    <path d="M14430 1515 l0 -445 -445 0 -445 0 0 -90 0 -90 445 0 445 0 0 -445 0 -445 90 0 90 0 0 445 0 445 445 0 445 0 0 90 0 90 -445 0 -445 0 0 445 0 445 -90 0 -90 0z"/>
+                  </g>
+                </svg>
+                <span>C++</span>
+              </li>
+              <li class="skill-item">
+                <!-- Python -->
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <title>Python</title>
+                  <path fill="#3776AB" d="M12.5 2.1c-1.6 0-3.3.2-4.9.5-.6.2-1 1-1 1.6l-.2 1.1c-.2 1.2.1 2.4 1 3.2.6.6 1.5.9 2.3.9H13v-2.2H9.7c-.4 0-.8-.2-1-.6-.3-.5-.2-1.1.2-1.5.7-.7 1.9-.9 2.8-.9 1.4 0 2.5.2 3.7.2 1.1 0 2.1-.4 2.8-1.2.7-.8 1-1.9.7-3-.2-.8-1-1.5-1.9-1.6-1.1-.2-2.3-.3-3.5-.3z"/>
+                  <path fill="#FFD43B" d="M11.5 21.9c1.6 0 3.3-.2 4.9-.5.6-.2 1-1 1-1.6l.2-1.1c.2-1.2-.1-2.4-1-3.2-.6-.6-1.5-.9-2.3-.9H11v2.2h3.3c.4 0 .8.2 1 .6.3.5.2 1.1-.2 1.5-.7.7-1.9.9-2.8.9-1.4 0-2.5-.2-3.7-.2-1.1 0-2.1.4-2.8 1.2-.7.8-1 1.9-.7 3 .2.8 1 1.5 1.9 1.6 1.1.2 2.3.3 3.5.3z"/>
+                </svg>
+                <span>Python</span>
+              </li>
+              <li class="skill-item">
+                <img src="https://cdn.simpleicons.org/html5/E34F26" alt="HTML5"><span>HTML</span>
+              </li>
+              <li class="skill-item">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-labelledby="css3Title">
+                  <title id="css3Title">CSS3</title>
+                  <path fill="#1572B6" d="M71 460L30 0h452l-41 460-185 52"/>
+                  <path fill="#33A9DC" d="M256 472l150-41 35-393H256"/>
+                  <path fill="#fff" d="M256 208h-89l6 68h83v-68zm0-88h88l-6 68H256V120z"/>
+                </svg><span>CSS</span>
+              </li>
+              <li class="skill-item">
+                <img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript"><span>JavaScript</span>
+              </li>
+              <li class="skill-item">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+                  <title>React</title>
+                  <g fill="none" stroke="#61DAFB" stroke-width="24">
+                    <ellipse cx="300" cy="300" rx="200" ry="80"/>
+                    <ellipse cx="300" cy="300" rx="200" ry="80" transform="rotate(60 300 300)"/>
+                    <ellipse cx="300" cy="300" rx="200" ry="80" transform="rotate(120 300 300)"/>
+                  </g>
+                  <circle cx="300" cy="300" r="30" fill="#61DAFB"/>
+                </svg><span>React</span>
+              </li>
+              <li class="skill-item">
+                <img src="https://cdn.simpleicons.org/mysql/00758F" alt="MySQL"><span>MySQL</span>
+              </li>
+              <li class="skill-item">
+                <img src="https://cdn.simpleicons.org/git/F05033" alt="Git"><span>Git</span>
+              </li>
+              <li class="skill-item">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <title>GitHub</title>
+                  <rect width="512" height="512" rx="15%" fill="#181717"/>
+                  <path fill="#fff" d="M256 32C132 32 32 132 32 256c0 98 64 182 153 211 11 2 15-5 15-11v-38c-62 13-75-30-75-30-10-27-26-34-26-34-21-14 2-14 2-14 23 2 35 24 35 24 21 35 54 25 67 19 2-15 8-25 14-31-51-6-105-26-105-114 0-25 9-46 24-62-2-6-11-29 2-61 0 0 20-6 64 24a223 223 0 0 1 116 0c44-30 64-24 64-24 13 32 5 55 2 61 15 16 24 37 24 62 0 88-54 108-105 114 9 8 16 23 16 45v67c0 6 4 13 15 11 89-29 153-113 153-211C480 132 380 32 256 32z"/>
+                </svg><span>GitHub</span>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-            // Fallbacks: some browsers throttle timers and rAF until a user gesture or until resources finish loading.
-            // Add several fallbacks so the page becomes interactive even when timers are delayed.
-            window.addEventListener('load', () => {
-                // If everything else didn't clear the preloader, force finish on full load
-                if (preloader.style.display !== 'none') finishPreloader();
-            });
+        <div id="contact" class="mt-20 gsap-reveal">
+          <h2 class="text-4xl font-extrabold text-gray-900 section-heading">Let's Build Something Amazing.</h2>
+          <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">I'm currently seeking new opportunities and am open to collaborations. Feel free to reach out!</p>
+          <div class="mt-8 flex justify-center items-center space-x-4">
+            <a href="https://www.linkedin.com/in/srishti-soni-72a760245/" target="_blank" class="bg-rose-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <a href="mailto:imsrishti1202@gmail.com" class="bg-gray-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 magnetic-link inline-flex items-center space-x-2">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.107 10-8.107v11.817h-20z"/></svg>
+              <span>Email Me</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && preloader.style.display !== 'none') {
-                    finishPreloader();
-                }
-            });
-
-            // One-time user interaction fallback (click/touch/keyboard) — helpful when the browser blocks timers until gesture
-            function onFirstInteraction() {
-                if (preloader.style.display !== 'none') finishPreloader();
-            }
-            window.addEventListener('click', onFirstInteraction, { once: true });
-            window.addEventListener('touchstart', onFirstInteraction, { once: true });
-            window.addEventListener('keydown', onFirstInteraction, { once: true });
-
-            function initPageAnimations() {
-                // --- GSAP & SCROLLTRIGGER SETUP ---
-                gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-                
-                // Clean up any existing ScrollTriggers
-                ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-                
-                // Enable ScrollTrigger debugging (comment out in production)
-                // ScrollTrigger.defaults({ markers: true });
-
-                const sections = gsap.utils.toArray(".panel");
-
-                // --- ADVANCED TEXT & ELEMENT ANIMATIONS ---
-                sections.forEach((section) => {
-                    const headings = section.querySelectorAll('.gsap-reveal-chars');
-                    headings.forEach(heading => {
-                        // Set initial visibility
-                        heading.style.opacity = '1';
-                        
-                        try {
-                            const typeSplit = new SplitType(heading, { types: 'chars' });
-                            heading.classList.add('split-initialized');
-                            
-                            // Set initial state for chars
-                            gsap.set(typeSplit.chars, { yPercent: 100, opacity: 0 });
-                            
-                            // Animate from initial state
-                            gsap.to(typeSplit.chars, {
-                                yPercent: 0, 
-                                opacity: 1, 
-                                duration: 0.6, 
-                                ease: 'power3.out', 
-                                stagger: 0.03,
-                                scrollTrigger: {
-                                    trigger: heading,
-                                    start: 'top 80%',
-                                    toggleActions: 'play none none none',
-                                    onComplete: () => {
-                                        // Ensure heading remains visible after animation
-                                        heading.style.opacity = '1';
-                                    }
-                                }
-                            });
-                        } catch (error) {
-                            console.warn('SplitType animation failed for heading:', heading, error);
-                            // Fallback: ensure heading is visible
-                            heading.style.opacity = '1';
-                            heading.style.transform = 'none';
-                        }
-                    });
-                    const simpleReveals = section.querySelectorAll('.gsap-reveal');
-                    simpleReveals.forEach(reveal => {
-                        // Ensure element is visible by default
-                        reveal.style.opacity = '1';
-                        
-                        gsap.fromTo(reveal, 
-                            {
-                                y: 50, 
-                                opacity: 0
-                            },
-                            {
-                                y: 0,
-                                opacity: 1, 
-                                duration: 1, 
-                                ease: 'power3.out',
-                                scrollTrigger: {
-                                    trigger: reveal,
-                                    start: 'top 80%',
-                                    toggleActions: 'play none none none',
-                                    onComplete: () => {
-                                        reveal.style.opacity = '1';
-                                    }
-                                }
-                            }
-                        );
-                    });
-                });
-                
-                gsap.to("#home .gsap-reveal svg", {
-                    yPercent: -20, ease: "none",
-                    scrollTrigger: {
-                        trigger: "#home",
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: true,
-                    },
-                });
-
-                // --- PARTICLE ENGINE ---
-                const canvas = document.getElementById('particle-canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                let particles = [];
-                let activeEffects = { mist: false };
-                const particleConfig = {
-                    mist: { count: 50, colors: ['rgba(147, 112, 219, 0.6)', 'rgba(192, 192, 192, 0.8)'] }
-                };
-                
-                 class Particle {
-                    constructor(type, colors, startX, startY) {
-                        this.type = type;
-                        this.color = colors[Math.floor(Math.random() * colors.length)];
-                        this.opacity = 1;
-                        this.life = 0;
-                        this.x = startX;
-                        this.y = startY;
-                        this.size = Math.random() * 3 + 1;
-                        this.speedX = (Math.random() - 0.5) * 4;
-                        this.speedY = (Math.random() - 0.5) * 4;
-                        this.maxLife = 60 + Math.random() * 40;
-                    }
-                    update() {
-                        this.x += this.speedX;
-                        this.y += this.speedY;
-                        this.life++;
-                        this.opacity = 1 - (this.life / this.maxLife);
-                    }
-                    draw() {
-                        if (this.opacity <= 0) return;
-                        ctx.save();
-                        ctx.globalAlpha = this.opacity;
-                        ctx.fillStyle = this.color;
-                        ctx.translate(this.x, this.y);
-                        ctx.beginPath();
-                        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.closePath();
-                        ctx.restore();
-                    }
-                }
-                function createParticles(type, startX, startY) {
-                    const config = particleConfig[type];
-                    if (!config || !config.colors) return;
-                    const count = config.count;
-                    for (let i = 0; i < count; i++) { particles.push(new Particle(type, config.colors, startX, startY)); }
-                }
-                function animateParticles() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    particles.forEach((p, index) => {
-                        p.update();
-                        p.draw();
-                        if (p.life >= p.maxLife) {
-                            particles.splice(index, 1);
-                        }
-                    });
-                    requestAnimationFrame(animateParticles);
-                }
-                
-                animateParticles();
-                
-                // --- LEAVES TRIGGERS ---
-                const leavesContainer = document.getElementById('leaves');
-                ScrollTrigger.create({
-                    trigger: '#experience',
-                    start: 'top center',
-                    end: 'bottom center',
-                    onEnter: () => gsap.to(leavesContainer, { autoAlpha: 1, duration: 1 }),
-                    onLeave: () => gsap.to(leavesContainer, { autoAlpha: 0, duration: 1 }),
-                    onEnterBack: () => gsap.to(leavesContainer, { autoAlpha: 1, duration: 1 }),
-                    onLeaveBack: () => gsap.to(leavesContainer, { autoAlpha: 0, duration: 1 }),
-                });
-                
-                // --- DANDELION WIND TRIGGERS ---
-                const dandelionWindTrigger = document.getElementById('dandelion-wind');
-                if (dandelionWindTrigger) {
-                    ScrollTrigger.create({
-                        trigger: '#projects',
-                        start: 'top center',
-                        end: 'bottom center',
-                        onEnter: () => gsap.to(dandelionWindTrigger, { autoAlpha: 1, duration: 1 }),
-                        onLeave: () => gsap.to(dandelionWindTrigger, { autoAlpha: 0, duration: 1 }),
-                        onEnterBack: () => gsap.to(dandelionWindTrigger, { autoAlpha: 1, duration: 1 }),
-                        onLeaveBack: () => gsap.to(dandelionWindTrigger, { autoAlpha: 0, duration: 1 }),
-                    });
-                }
-
-                // Exact code from user's original query
-                const petalCanvas = document.querySelector('#about canvas')
-                petalCanvas.width = window.innerWidth
-                petalCanvas.height = window.innerHeight
-                const petalCtx = petalCanvas.getContext('2d')
-
-                const TOTAL = 100
-                const petalArray = []
-
-                const petalImg = new Image()
-                petalImg.src = 'https://djjjk9bjm164h.cloudfront.net/petal.png'
-                petalImg.addEventListener('load', () => {
-                  for (let i = 0; i < TOTAL; i++) {
-                    petalArray.push(new Petal())
-                  }
-                  render()
-                })
-
-                function render() {
-                  petalCtx.clearRect(0, 0, petalCanvas.width, petalCanvas.height)
-                  petalArray.forEach(petal => petal.animate())
-                  window.requestAnimationFrame(render)
-                }
-
-                window.addEventListener('resize', () => {
-                  petalCanvas.width = window.innerWidth
-                  petalCanvas.height = window.innerHeight
-                })
-                
-                // Dandelion Wind Seeds Animation for Projects Section
-                const dandelionWind = document.getElementById('dandelion-wind');
-                if (dandelionWind) {
-                    function createWindSeed() {
-                        const seed = document.createElement('div');
-                        seed.className = Math.random() > 0.7 ? 'seed flutter' : 'seed';
-                        
-                        // Random starting position (left side of screen)
-                        const startX = -20 + Math.random() * 60;
-                        const startY = 50 + Math.random() * 400;
-                        seed.style.left = startX + 'px';
-                        seed.style.top = startY + 'px';
-                        
-                        // Random duration
-                        const duration = 15 + Math.random() * 10; // 15-25 seconds
-                        seed.style.setProperty('--dur', duration + 's');
-                        
-                        // Generate random path waypoints
-                        const waypoints = [];
-                        let currentX = 0, currentY = 0;
-                        
-                        for (let i = 0; i <= 5; i++) {
-                            currentX += 60 + Math.random() * 40; // drift right
-                            currentY += -30 + Math.random() * 60; // gentle up/down variation
-                            waypoints.push({ x: currentX, y: currentY });
-                        }
-                        
-                        // Set CSS custom properties for the path
-                        seed.style.setProperty('--sx0', '0px');
-                        seed.style.setProperty('--sy0', '0px');
-                        waypoints.forEach((point, i) => {
-                            seed.style.setProperty(`--sx${i + 1}`, point.x + 'px');
-                            seed.style.setProperty(`--sy${i + 1}`, point.y + 'px');
-                        });
-                        
-                        // Random scale for variety
-                        const scale = 0.7 + Math.random() * 0.6;
-                        seed.style.transform = `scale(${scale})`;
-                        
-                        dandelionWind.appendChild(seed);
-                        
-                        // Remove after animation
-                        setTimeout(() => {
-                            if (seed.parentNode) {
-                                seed.remove();
-                            }
-                        }, duration * 1000 + 1000);
-                    }
-                    
-                    // Create seeds periodically
-                    function startSeedGeneration() {
-                        createWindSeed();
-                        // Random interval between seeds
-                        const nextDelay = 1000 + Math.random() * 2000; // 1-3 seconds
-                        setTimeout(startSeedGeneration, nextDelay);
-                    }
-                    
-                    // Start the seed generation
-                    setTimeout(startSeedGeneration, 1000);
-                }
-
-                let mouseX = 0
-                function touchHandler(e) {
-                  mouseX = (e.clientX || e.touches[0].clientX) / window.innerWidth
-                }
-                window.addEventListener('mousemove', touchHandler)
-                window.addEventListener('touchmove', touchHandler)
-
-                // Petal class
-                class Petal {
-                  constructor() {
-                    this.x = Math.random() * petalCanvas.width
-                    this.y = (Math.random() * petalCanvas.height * 2) - petalCanvas.height
-                    this.w = 25 + Math.random() * 15
-                    this.h = 20 + Math.random() * 10
-                    this.opacity = this.w / 40
-                    this.flip = Math.random()
-
-                    this.xSpeed = 0.15 + Math.random() * 0.2   // Slightly faster than before
-                    this.ySpeed = 0.08 + Math.random() * 0.12  // Slightly faster than before
-                    this.flipSpeed = Math.random() * 0.005   // Further reduced for calmer motion
-                  }
-
-                  draw() {
-                    if (this.y > petalCanvas.height || this.x > petalCanvas.width) {
-                      this.x = -petalImg.width
-                      this.y = (Math.random() * petalCanvas.height * 2) - petalCanvas.height
-                      this.xSpeed = 0.15 + Math.random() * 0.2
-                      this.ySpeed = 0.08 + Math.random() * 0.12
-                      this.flip = Math.random()
-                    }
-                    petalCtx.globalAlpha = this.opacity
-                    petalCtx.drawImage(
-                      petalImg, 
-                      this.x, 
-                      this.y, 
-                      this.w * (0.6 + (Math.abs(Math.cos(this.flip)) / 3)), 
-                      this.h * (0.8 + (Math.abs(Math.sin(this.flip)) / 5))
-                    )
-                  }
-
-                  animate() {
-                    this.x += this.xSpeed + mouseX * 0.2  // Minimal mouse effect
-                    this.y += this.ySpeed + mouseX * 0.1  // Minimal mouse effect
-                    this.flip += this.flipSpeed
-                    this.draw()
-                  }
-                }
-
-                window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-                
-                // --- MIST EFFECT ON HEADING CLICK ---
-                document.querySelectorAll('.section-heading').forEach(heading => {
-                    heading.addEventListener('click', (e) => {
-                         const rect = heading.getBoundingClientRect();
-                         const startX = rect.left + (rect.width / 2);
-                         const startY = rect.top + (rect.height / 2);
-                         createParticles('mist', startX, startY);
-                    });
-                });
-
-                // --- NAVIGATION ---
-                document.querySelectorAll('header a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const targetId = this.getAttribute('href');
-                        const targetSection = document.querySelector(targetId);
-                        if (targetSection) {
-                            gsap.to(window, { scrollTo: { y: targetSection, autoKill: false }, duration: 1.5, ease: 'power2.inOut' });
-                            const mobileMenu = document.getElementById('mobile-menu');
-                            if(!mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
-                        }
-                    });
-                });
-                
+  <!-- External libs -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<script defer src="app.js"></script>
 
 
-                // --- SKILL SCROLLER ---
-                const scrollers = document.querySelectorAll(".scroller");
-                if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                    scrollers.forEach((scroller) => {
-                        const scrollerInner = scroller.querySelector(".scroller__inner");
-                        if(scroller.dataset.animated) return;
-                        scroller.dataset.animated = true;
-                        const scrollerContent = Array.from(scrollerInner.children);
-                        scrollerContent.forEach(item => {
-                            const duplicatedItem = item.cloneNode(true);
-                            duplicatedItem.setAttribute("aria-hidden", true);
-                            scrollerInner.appendChild(duplicatedItem);
-                        });
-                    });
-                }
-                
-                // --- SVG GOLDEN SNITCH CURSOR ---
-                const snitchCursor = document.getElementById('snitch-cursor');
-                const snitchSvg = document.getElementById('snitch-svg');
-                const leftWing = document.getElementById('left-wing');
-                const rightWing = document.getElementById('right-wing');
-
-                // Ensure snitch is visible
-                if (snitchCursor) {
-                    snitchCursor.style.display = 'block';
-                    snitchCursor.style.opacity = '1';
-                }
-
-                gsap.set(snitchCursor, { xPercent: -50, yPercent: -50 });
-                gsap.set(leftWing, { transformOrigin: '100% 50%' });
-                gsap.set(rightWing, { transformOrigin: '0% 50%' });
-                
-                const tl = gsap.timeline({ repeat: -1, yoyo: true });
-                tl.to(leftWing, { rotation: -35, duration: 0.15, ease: 'sine.inOut' })
-                  .to(rightWing, { rotation: 35, duration: 0.15, ease: 'sine.inOut' }, 0);
-                
-                gsap.to(snitchSvg, { y: -10, duration: 1.2, repeat: -1, yoyo: true, ease: 'sine.inOut'});
-
-                const snitchPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-                const mousePos = { x: snitchPos.x, y: snitchPos.y };
-                const speed = 0.2;
-                const xSet = gsap.quickSetter(snitchCursor, "x", "px");
-                const ySet = gsap.quickSetter(snitchCursor, "y", "px");
-                window.addEventListener('mousemove', e => {
-                    mousePos.x = e.clientX;
-                    mousePos.y = e.clientY;
-                });
-                gsap.ticker.add(() => {
-                    const dt = 1.0 - Math.pow(1.0 - speed, gsap.ticker.deltaRatio()); 
-                    snitchPos.x += (mousePos.x - snitchPos.x) * dt;
-                    snitchPos.y += (mousePos.y - snitchPos.y) * dt;
-                    xSet(snitchPos.x);
-                    ySet(snitchPos.y);
-                });
-
-
-                // --- MAGNETIC BUTTONS ---
-                const magneticElements = document.querySelectorAll('.magnetic-link');
-                magneticElements.forEach(el => {
-                    const strength = 0.5;
-                    el.addEventListener('mousemove', e => {
-                        const rect = el.getBoundingClientRect();
-                        const x = e.clientX - rect.left - rect.width / 2;
-                        const y = e.clientY - rect.top - rect.height / 2;
-                        gsap.to(el, { x: x * strength, y: y * strength, duration: 0.4, ease: 'power2.out' });
-                    });
-                    el.addEventListener('mouseleave', () => {
-                        gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
-                    });
-                });
-
-                // --- MOBILE MENU ---
-                document.getElementById('mobile-menu-button').addEventListener('click', () => {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
-                });
-                
-                // --- SPARKLE EFFECT ---
-                const sparkleElements = document.querySelectorAll('.sparkle-hover');
-                sparkleElements.forEach(el => {
-                    // Ensure the element has relative positioning for absolute children
-                    const computedStyle = window.getComputedStyle(el);
-                    if (computedStyle.position === 'static') {
-                        el.style.position = 'relative';
-                    }
-                    
-                    el.addEventListener('mousemove', e => {
-                        const rect = el.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-
-                        const sparkle = document.createElement('span');
-                        sparkle.style.position = 'absolute';
-                        sparkle.style.left = `${x}px`;
-                        sparkle.style.top = `${y}px`;
-                        sparkle.style.width = '2px';
-                        sparkle.style.height = '2px';
-                        sparkle.style.backgroundColor = '#C0C0C0'; // Silver
-                        sparkle.style.borderRadius = '50%';
-                        sparkle.style.pointerEvents = 'none';
-                        sparkle.style.zIndex = '1000';
-                        sparkle.style.transform = 'translate(-50%, -50%)';
-                        el.appendChild(sparkle);
-
-                        // Add some randomness to the sparkle colors
-                        const colors = ['#C0C0C0', '#9932CC', '#DA70D6', '#DDA0DD'];
-                        sparkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-                        gsap.fromTo(sparkle, 
-                            { 
-                                scale: 0, 
-                                opacity: 1 
-                            },
-                            {
-                                scale: gsap.utils.random(4, 8),
-                                opacity: 0,
-                                duration: 0.6,
-                                ease: 'power2.out',
-                                onComplete: () => {
-                                    if (sparkle.parentNode) {
-                                        sparkle.remove();
-                                    }
-                                }
-                            }
-                        );
-                    });
-                });
-
-
-                // --- LABUBU BUBBLE ---
-                const labubuBubble = document.getElementById('labubu-bubble');
-                const labubuText = document.getElementById('labubu-text');
-                let jokeInterval;
-
-                const jokesAndWisdom = [
-                    "If programme works, don't touch the code no more.",
-                    "There are two hard things in programming: naming things, and off-by-one errors.",
-                    "Just git push and pray.",
-                    "Computers are fast; programmers keep them slow.",
-                    "I'm not lazy, I'm on energy-saving mode.",
-
-
-                ];
-                
-                function changeJoke() {
-                    gsap.to(labubuText, {
-                        opacity: 0,
-                        duration: 0.5,
-                        onComplete: () => {
-                            const randomIndex = Math.floor(Math.random() * jokesAndWisdom.length);
-                            labubuText.textContent = jokesAndWisdom[randomIndex];
-                            gsap.to(labubuText, { opacity: 1, duration: 0.5 });
-                        }
-                    });
-                }
-                
-                // Show the bubble right away and start the jokes
-                gsap.to(labubuBubble, {
-                    autoAlpha: 1,
-                    scale: 1,
-                    duration: 0.5,
-                    ease: 'back.out(1.7)',
-                    delay: 1 // Add a small delay after page load
-                });
-                labubuText.textContent = "Hi!";
-                if(jokeInterval) clearInterval(jokeInterval);
-                setTimeout(() => {
-                    jokeInterval = setInterval(changeJoke, 6000); 
-                    changeJoke();
-                }, 3000);
-                
-                // --- ORBIT SPARKS FOR SKILLS ---
-                const skillItems = document.querySelectorAll('.skill-item');
-                skillItems.forEach((item, index) => {
-                    // Create 2-4 sparks per skill item
-                    const sparkCount = Math.floor(Math.random() * 3) + 2;
-                    
-                    for (let i = 0; i < sparkCount; i++) {
-                        const spark = document.createElement('div');
-                        spark.className = 'skill-spark';
-                        
-                        // Random starting angle and radius
-                        const angle = Math.random() * 360;
-                        const radius = 18 + Math.random() * 12; // 18-30px radius
-                        const duration = 6 + Math.random() * 4; // 6-10s duration
-                        
-                        // Set CSS custom properties
-                        spark.style.setProperty('--a', angle + 'deg');
-                        spark.style.setProperty('--r', radius + 'px');
-                        spark.style.setProperty('--dur', duration + 's');
-                        
-                        // Add delay based on skill item index and spark index
-                        spark.style.animationDelay = `${(index * 0.5) + (i * 0.3)}s`;
-                        
-                        item.appendChild(spark);
-                    }
-                });
-
-                // --- BACKGROUND SPARKLES FOR SKILLS SECTION ---
-                const skillsSparklesContainer = document.getElementById('skills-sparkles');
-                if (skillsSparklesContainer) {
-                    function createBackgroundSparkle() {
-                        const sparkle = document.createElement('div');
-                        sparkle.className = 'bg-sparkle';
-                        
-                        // Random horizontal position
-                        const startX = Math.random() * window.innerWidth;
-                        const endX = startX + (Math.random() - 0.5) * 200; // Gentle horizontal drift
-                        
-                        // Random animation duration and glow timing
-                        const duration = 8 + Math.random() * 6; // 8-14 seconds
-                        const glowDuration = 2 + Math.random() * 3; // 2-5 seconds
-                        
-                        // Set position and animation properties
-                        sparkle.style.left = startX + 'px';
-                        sparkle.style.setProperty('--start-x', '0px');
-                        sparkle.style.setProperty('--end-x', (endX - startX) + 'px');
-                        sparkle.style.setProperty('--duration', duration + 's');
-                        sparkle.style.setProperty('--glow-duration', glowDuration + 's');
-                        
-                        // Random delay
-                        sparkle.style.animationDelay = Math.random() * 3 + 's';
-                        
-                        skillsSparklesContainer.appendChild(sparkle);
-                        
-                        // Remove sparkle after animation
-                        setTimeout(() => {
-                            if (sparkle.parentNode) {
-                                sparkle.remove();
-                            }
-                        }, (duration + 3) * 1000);
-                    }
-                    
-                    // Create sparkles periodically
-                    function startBackgroundSparkles() {
-                        createBackgroundSparkle();
-                        // Create new sparkle every 1-3 seconds
-                        setTimeout(startBackgroundSparkles, 1000 + Math.random() * 2000);
-                    }
-                    
-                    // Start creating background sparkles after a short delay
-                    setTimeout(startBackgroundSparkles, 1000);
-                }
-
-                // Final ScrollTrigger refresh to ensure all animations are properly initialized
-                setTimeout(() => {
-                    ScrollTrigger.refresh();
-                }, 100);
-            }
-        });
-    </script>
+  <!-- App script -->
 </body>
 </html>
-
